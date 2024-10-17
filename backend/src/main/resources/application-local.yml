@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ButexBackend
+  datasource:
+    url: jdbc:postgresql://dpg-cs8lh8bv2p9s73e3ndtg-a.frankfurt-postgres.render.com:5432/butex
+    username: butex
+    password: JBBKmhNdeo2bzSVZDsR1NFjrxoiUigeN
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+ButexValues:
+  app:
+    jwtSecret: c8a2247d9a3906afcc05b552afdc4f4f79a511ca56af7f6591646a49a30c668c9d8f507207e1807eb78c4818f85ab9cc9f9521705d086ba5eb769231af94e4154673de083f8647900c1a615656fa6a5abb102f8dc24d5a24239da9edf4cd07fe9c945cc3be445889c8d9893284dd523bc58cf0a396329a1b7ba12ecefbdf133f
+    jwtExpirationMs: 86400000
