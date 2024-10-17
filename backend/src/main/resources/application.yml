@@ -2,9 +2,9 @@ spring:
   application:
     name: ButexBackend
   datasource:
-    url: jdbc:postgresql://localhost:5432/ButexDB
-    username: postgres
-    password: root
+    url: jdbc:postgresql://dpg-cs8lh8bv2p9s73e3ndtg-a.frankfurt-postgres.render.com:5432/butex
+    username: butex
+    password: JBBKmhNdeo2bzSVZDsR1NFjrxoiUigeN
   jpa:
     hibernate:
       ddl-auto: update
