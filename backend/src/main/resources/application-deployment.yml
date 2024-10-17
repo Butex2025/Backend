@@ -2,7 +2,7 @@ spring:
   application:
     name: ButexBackend
   datasource:
-    url: jdbc:postgresql://dpg-cs8lh8bv2p9s73e3ndtg-a.frankfurt-postgres.render.com:5432/butex
+    url: jdbc:postgresql://dpg-cs8lh8bv2p9s73e3ndtg-a:5432/butex
     username: butex
     password: ${DB_PASSWORD}
   jpa:
