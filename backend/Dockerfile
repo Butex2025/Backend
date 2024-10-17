@@ -1,18 +1,15 @@
-FROM eclipse-temurin:17-jdk-alpine AS build
-WORKDIR /app
-COPY pom.xml .
-COPY src src
+#
+# Build stage
+#
+FROM maven:3.8.3-openjdk-17 AS build
+COPY . .
+RUN mvn clean install
 
-# Copy Maven wrapper
-COPY mvnw .
-COPY .mvn .mvn
-
-# Set execution permission for the Maven wrapper
-RUN chmod +x ./mvnw
-RUN ./mvnw clean package -DskipTests
-
-FROM eclipse-temurin:17-jdk-alpine
-VOLUME /tmp
-COPY target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+#
+# Package stage
+#
+FROM eclipse-temurin:17-jdk
+COPY --from=build /target/backend-0.0.1-SNAPSHOT.jar app.jar
+# ENV PORT=8080
 EXPOSE 8080
+ENTRYPOINT ["java","-jar","app.jar"]
