@@ -1,4 +1,4 @@
-package io.github.butex.backend.dto;
+package io.github.butex.backend.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -34,9 +34,5 @@ public class SignUpRequestDTO {
 
     @NotBlank(message = "Confirm Password cannot be empty")
     private String confirmPassword;
-
-    public boolean doPasswordsMatch() {
-        return this.password.equals(this.confirmPassword);
-    }
 
 }

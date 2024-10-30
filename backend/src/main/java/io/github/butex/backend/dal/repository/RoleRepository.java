@@ -1,7 +1,7 @@
-package io.github.butex.backend.dao.repository;
+package io.github.butex.backend.dal.repository;
 
-import io.github.butex.backend.dao.entity.RoleEntity;
-import io.github.butex.backend.dao.entity.RoleType;
+import io.github.butex.backend.dal.entity.RoleEntity;
+import io.github.butex.backend.constant.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

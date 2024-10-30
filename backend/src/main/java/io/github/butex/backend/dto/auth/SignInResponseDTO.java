@@ -1,4 +1,4 @@
-package io.github.butex.backend.dto;
+package io.github.butex.backend.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

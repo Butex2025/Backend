@@ -1,4 +1,4 @@
-package io.github.butex.backend.dao.entity;
+package io.github.butex.backend.constant;
 
 public enum RoleType {
     USER,

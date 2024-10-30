@@ -1,4 +1,4 @@
-package io.github.butex.backend.utils;
+package io.github.butex.backend.auth;
 
 import io.github.butex.backend.auth.user_details.UserDetailsImpl;
 import io.jsonwebtoken.*;
@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 @Component
 @Log4j2
-public class JwtUtils {
+public class JwtUtil {
 
     @Value("${ButexValues.app.jwtSecret}")
     private String jwtSecret;
@@ -27,19 +27,13 @@ public class JwtUtils {
         return extractClaim(token, Claims::getSubject);
     }
 
-    private String getClaim(String token, String name) {
-        return (String) extractAllClaims(token).get(name);
-    }
-
-
     public String generateJwtToken(Authentication authentication) {
-
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -52,9 +46,9 @@ public class JwtUtils {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
+        return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token)
@@ -78,5 +72,4 @@ public class JwtUtils {
 
         return false;
     }
-
 }

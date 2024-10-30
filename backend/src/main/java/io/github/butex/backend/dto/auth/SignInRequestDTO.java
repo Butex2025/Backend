@@ -1,4 +1,4 @@
-package io.github.butex.backend.dto;
+package io.github.butex.backend.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

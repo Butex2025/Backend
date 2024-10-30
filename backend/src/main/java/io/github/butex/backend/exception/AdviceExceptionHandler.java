@@ -14,23 +14,22 @@ public class AdviceExceptionHandler {
 
     @ExceptionHandler({DataNotFoundException.class})
     public ResponseEntity<MessageError> dataNotFoundException(DataNotFoundException ex, WebRequest request) {
-        MessageError message = new MessageError(
-                HttpStatus.NOT_FOUND.value(),
-                new Date(),
-                ex.getMessage(),
-                request.getDescription(false));
+        return prepareErrorResponseEntity(HttpStatus.NOT_FOUND, ex, request);
 
-        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({UserExistException.class})
     public ResponseEntity<MessageError> userExistException(UserExistException ex, WebRequest request) {
-        MessageError message = new MessageError(
-                HttpStatus.BAD_REQUEST.value(),
+        return prepareErrorResponseEntity(HttpStatus.BAD_REQUEST, ex, request);
+    }
+
+    private ResponseEntity<MessageError> prepareErrorResponseEntity(HttpStatus httpStatus, RuntimeException ex, WebRequest request){
+        MessageError messageError = new MessageError(
+                httpStatus.value(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));
 
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(messageError, httpStatus);
     }
 }
