@@ -1,6 +1,6 @@
 package io.github.butex.backend.controller;
 
-import io.github.butex.backend.dal.entity.UserEntity;
+import io.github.butex.backend.dal.entity.User;
 import io.github.butex.backend.dto.auth.SignInRequestDTO;
 import io.github.butex.backend.dto.auth.SignInResponseDTO;
 import io.github.butex.backend.dto.auth.SignUpRequestDTO;
@@ -34,13 +34,13 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Passwords do not match");
         }
 
-        UserEntity userEntity = userService.getUserByEmail(signInRequestDTO.getEmail());
+        User user = userService.getUserByEmail(signInRequestDTO.getEmail());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInRequestDTO.getEmail(), signInRequestDTO.getPassword())
         );
 
         String jwtToken = jwtUtils.generateJwtToken(authentication);
-        return ResponseEntity.ok(new SignInResponseDTO(signInRequestDTO.getEmail(), jwtToken, userEntity.getRole().getRoleName().name()));
+        return ResponseEntity.ok(new SignInResponseDTO(signInRequestDTO.getEmail(), jwtToken, user.getRole().getRoleName().name()));
     }
 
     @PostMapping("/signup")

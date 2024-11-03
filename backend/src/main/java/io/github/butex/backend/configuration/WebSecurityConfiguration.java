@@ -50,7 +50,8 @@ public class WebSecurityConfiguration {
                                 .requestMatchers("/api/v1/auth/*").permitAll()
                                 .requestMatchers("/api/v1/hello-world/admin").hasRole(RoleType.ADMIN.name())
                                 .requestMatchers("/api/v1/hello-world/user").hasRole(RoleType.USER.name())
-                                .anyRequest().authenticated()
+//                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 );
 
         http.authenticationProvider(authenticationProvider());

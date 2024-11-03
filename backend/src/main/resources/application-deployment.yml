@@ -7,7 +7,21 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+
+furgonetka:
+  environment-url: https://api.sandbox.furgonetka.pl
+  api-token: ${FURGONETKA_API_TOKEN}
+  endpoint:
+    package-validate: /packages/validate
+    package-create: /packages
+paynow:
+  environment-url: https://api.sandbox.paynow.pl
+  api-token: ${PAYNOW_API_TOKEN}
+  signature-token: ${PAYNOW_SIGNATURE_TOKEN}
+  endpoint:
+    payment-create: /v1/payments
+    payment-status: /v1/payments/{paymentId}/status
 
 ButexValues:
   app:

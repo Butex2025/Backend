@@ -1,7 +1,7 @@
 package io.github.butex.backend.auth.user_details;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.github.butex.backend.dal.entity.UserEntity;
+import io.github.butex.backend.dal.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +28,7 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserDetailsImpl build(UserEntity user) {
+    public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().getRoleName()));
 
         return new UserDetailsImpl(

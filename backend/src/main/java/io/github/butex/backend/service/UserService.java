@@ -1,9 +1,9 @@
 package io.github.butex.backend.service;
 
 import io.github.butex.backend.auth.PassEncoder;
-import io.github.butex.backend.dal.entity.RoleEntity;
+import io.github.butex.backend.dal.entity.Role;
 import io.github.butex.backend.constant.RoleType;
-import io.github.butex.backend.dal.entity.UserEntity;
+import io.github.butex.backend.dal.entity.User;
 import io.github.butex.backend.dal.repository.UserRepository;
 import io.github.butex.backend.dto.auth.SignUpRequestDTO;
 import io.github.butex.backend.dto.UserDTO;
@@ -23,7 +23,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder = new PassEncoder();
 
-    public UserEntity getUserByEmail(final String email) {
+    public User getUserByEmail(final String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new DataNotFoundException("User Not Found with email: " + email));
     }
@@ -33,22 +33,22 @@ public class UserService {
             throw new UserExistException("User already exist");
         }
 
-        RoleEntity roleEntity = roleService.findRoleByRoleType(RoleType.USER);
+        Role role = roleService.findRoleByRoleType(RoleType.USER);
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEmail(signUpRequestDTO.getEmail());
-        userEntity.setFirstName(signUpRequestDTO.getFirstName());
-        userEntity.setLastName(signUpRequestDTO.getLastName());
-        userEntity.setPasswordHash(passwordEncoder.encode(signUpRequestDTO.getPassword()));
-        userEntity.setRole(roleEntity);
+        User user = new User();
+        user.setEmail(signUpRequestDTO.getEmail());
+        user.setFirstName(signUpRequestDTO.getFirstName());
+        user.setLastName(signUpRequestDTO.getLastName());
+        user.setPasswordHash(passwordEncoder.encode(signUpRequestDTO.getPassword()));
+        user.setRole(role);
 
-        UserEntity savedUser = userRepository.save(userEntity);
+        User savedUser = userRepository.save(user);
         return userMapper.userToUserDTO(savedUser);
     }
 
     public boolean validateUser(final String email, final String password) {
-        UserEntity userEntity = getUserByEmail(email);
-        return passwordEncoder.matches(passwordEncoder.encode(password), userEntity.getPasswordHash());
+        User user = getUserByEmail(email);
+        return passwordEncoder.matches(passwordEncoder.encode(password), user.getPasswordHash());
     }
 
 }

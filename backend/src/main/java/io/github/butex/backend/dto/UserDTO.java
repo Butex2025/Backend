@@ -1,6 +1,6 @@
 package io.github.butex.backend.dto;
 
-import io.github.butex.backend.dal.entity.RoleEntity;
+import io.github.butex.backend.dal.entity.Role;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,6 +14,6 @@ public class UserDTO {
     private final String lastName;
     private final String passwordHash;
     private final LocalDateTime dateJoined = LocalDateTime.now();
-    private final RoleEntity role;
+    private final Role role;
 
 }
