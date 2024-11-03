@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/sign_up.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -9,16 +8,12 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  late TextEditingController controllerEmail = TextEditingController();
-  late TextEditingController controllerPass = TextEditingController();
+  final TextEditingController controllerEmail = TextEditingController();
+  final TextEditingController controllerPass = TextEditingController();
+
   String email = '';
   String password = '';
-  bool passVisibilty = true;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  bool passVisibility = true;
 
   @override
   void dispose() {
@@ -32,173 +27,179 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
       appBar: AppBar(
         leading: Container(
-            alignment: Alignment.center,
-            child: IconButton(
-                onPressed: () {
-                  //Navigator.pop(context);
-                },
-                icon: const Icon(Icons.arrow_back_ios_new))),
+          alignment: Alignment.center,
+        ),
       ),
       body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 80),
-            const Text(
-              'Hello Again!',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-              ),
-            ),
-            const Text(
-              'Welcome Back Youve Been Missed!',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-            const SizedBox(height: 60),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(width: 30),
-                Text(
-                  'Email Address',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 80),
+              const Text(
+                'Hello Again!',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
                 ),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 5, left: 30, right: 30),
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.11),
-                  blurRadius: 40,
-                  spreadRadius: 0.0,
-                )
-              ]),
-              child: TextField(
-                keyboardType: TextInputType.emailAddress,
-                controller: controllerEmail,
-                onChanged: (String value) {
-                  setState(() {
-                    email = controllerEmail.text;
-                  });
-                },
-                decoration: InputDecoration(
+              ),
+              const Text(
+              'Welcome Back Youve Been Missed!',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              const SizedBox(height: 60),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(width: 30),
+                  Text(
+                    'Email Address',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 5, left: 30, right: 30),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.11),
+                      blurRadius: 40,
+                      spreadRadius: 0.0,
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  controller: controllerEmail,
+                  onChanged: (String value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                  decoration: InputDecoration(
                     hintText: 'name@mail.com',
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide.none)),
-              ),
-            ),
-            const SizedBox(height: 30),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(width: 30),
-                Text(
-                  'Password',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide.none,
+                    ),
                   ),
                 ),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 5, left: 30, right: 30),
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.11),
-                  blurRadius: 40,
-                  spreadRadius: 0.0,
-                )
-              ]),
-              child: TextField(
-                controller: controllerPass,
-                onChanged: (String value) {
-                  setState(() {
-                    password = controllerPass.text;
-                  });
-                },
-                obscureText: passVisibilty,
-                decoration: InputDecoration(
+              ),
+              const SizedBox(height: 30),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(width: 30),
+                  Text(
+                    'Password',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 5, left: 30, right: 30),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.11),
+                      blurRadius: 40,
+                      spreadRadius: 0.0,
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: controllerPass,
+                  onChanged: (String value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
+                  obscureText: passVisibility,
+                  decoration: InputDecoration(
                     suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            passVisibilty
-                                ? passVisibilty = false
-                                : passVisibilty = true;
-                          });
-                        },
-                        icon: (passVisibilty
-                            ? const Icon(Icons.visibility_outlined)
-                            : const Icon(Icons.visibility_off_outlined))),
+                      onPressed: () {
+                        setState(() {
+                          passVisibility = !passVisibility;
+                        });
+                      },
+                      icon: passVisibility
+                          ? const Icon(Icons.visibility_outlined)
+                          : const Icon(Icons.visibility_off_outlined),
+                    ),
                     hintText: 'password',
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide.none)),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                  child: const Text('Recovery Password'),
-                  onTap: () {},
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
                 ),
-                const SizedBox(width: 30),
-              ],
-            ),
-            Container(
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    child: const Text('Recovery Password'),
+                  onTap: () {},
+                  ),
+                  const SizedBox(width: 30),
+                ],
+              ),
+              Container(
                 margin: const EdgeInsets.only(top: 30, left: 30, right: 30),
                 width: 350,
                 height: 50,
                 child: ElevatedButton(
-                    onPressed: () {
-                      print('Email: $email Password: $password');
-                    },
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                    child: const Text(
-                      'Sign In',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ))),
-            const SizedBox(height: 200),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Dont Have An Account?   ',
-                  style: TextStyle(
-                    fontSize: 10,
+                  onPressed: () {
+                    print('Email: $email Password: $password');
+                    Navigator.pushReplacementNamed(context, '/main');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: const Text(
+                    'Sign In',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),
-                GestureDetector(
-                  child: const Text(
-                    'Sign Up For Free',
+              ),
+              const SizedBox(height: 200),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                  'Dont Have An Account?   ',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
                       fontSize: 10,
                     ),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SignUp()));
-                  },
-                )
-              ],
-            ),
-          ],
+                  GestureDetector(
+                    child: const Text(
+                      'Sign Up For Free',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/signup');
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

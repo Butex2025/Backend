@@ -15,9 +15,9 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     Timer(
-        Duration(seconds: 2),
-        () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => SignIn())));
+      Duration(seconds: 2),
+      () => Navigator.of(context).pushReplacementNamed('/signin'),
+    );
   }
 
   @override
