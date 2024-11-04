@@ -43,8 +43,10 @@ class _MainScreenState extends State<MainScreen> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
-    final double paddingHorizontal = screenWidth * 0.04; // 4% szerokosc telefonu
-    final double paddingVertical = screenHeight * 0.015; // 1.5% wysokosc telefonu
+    final double paddingHorizontal =
+        screenWidth * 0.04; // 4% szerokosc telefonu
+    final double paddingVertical =
+        screenHeight * 0.015; // 1.5% wysokosc telefonu
     final double containerHeight = screenHeight * 0.18;
     final double imageWidth = screenWidth * 0.25;
     final double imageHeight = screenHeight * 0.12;
@@ -55,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
         leading: IconButton(
           icon: Icon(Icons.menu_rounded),
           onPressed: () {
-            // menu
+            Navigator.pushReplacementNamed(context, '/user_page');
           },
         ),
         actions: [
@@ -121,8 +123,7 @@ class _MainScreenState extends State<MainScreen> {
                     height: containerHeight,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius:
-                          BorderRadius.circular(screenWidth * 0.05),
+                      borderRadius: BorderRadius.circular(screenWidth * 0.05),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.11),
@@ -139,8 +140,7 @@ class _MainScreenState extends State<MainScreen> {
                               child: Padding(
                                 padding: EdgeInsets.all(paddingHorizontal),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
@@ -165,8 +165,8 @@ class _MainScreenState extends State<MainScreen> {
                             SizedBox(
                               width: imageWidth,
                               child: Padding(
-                                padding: EdgeInsets.only(
-                                    right: paddingHorizontal),
+                                padding:
+                                    EdgeInsets.only(right: paddingHorizontal),
                                 child: Image.asset(
                                   shoe['image'],
                                   width: imageWidth,
@@ -189,15 +189,13 @@ class _MainScreenState extends State<MainScreen> {
                               borderRadius: BorderRadius.only(
                                 bottomRight:
                                     Radius.circular(screenWidth * 0.05),
-                                topLeft:
-                                    Radius.circular(screenWidth * 0.05),
+                                topLeft: Radius.circular(screenWidth * 0.05),
                               ),
                               child: SizedBox(
                                 width: buttonSize,
                                 height: buttonSize,
                                 child: DecoratedBox(
-                                  decoration:
-                                      BoxDecoration(color: Colors.blue),
+                                  decoration: BoxDecoration(color: Colors.blue),
                                   child: Icon(
                                     Icons.add_shopping_cart,
                                     color: Colors.white,

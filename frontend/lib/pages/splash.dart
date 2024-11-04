@@ -1,7 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/sign_in.dart';
+import 'package:http/http.dart' as http;
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -14,9 +12,43 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Timer(
-      Duration(seconds: 2),
-      () => Navigator.of(context).pushReplacementNamed('/signin'),
+    waitForServer();
+  }
+
+  void waitForServer() async {
+    final url = Uri.parse('https://butex.onrender.com/api/v1/hello-world/all');
+    final response = await http.get(
+      url,
+      headers: {
+        'accept': '*/*',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Navigator.of(context).pushNamed('/signin');
+    } else {
+      showErrorPop();
+    }
+  }
+
+  void showErrorPop() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Błąd połączenia'),
+          content: Text(
+              'Nie udało się połączyć z serwerem. Spróbuj ponownie później.'),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -45,17 +77,6 @@ class _SplashPageState extends State<SplashPage> {
                 fontSize: 30,
               ),
             ),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       Navigator.push(context,
-            //           MaterialPageRoute(builder: (context) => SignIn()));
-            //     },
-            //     child: const Text(
-            //       'Next page',
-            //       style: TextStyle(
-            //         color: Colors.blue,
-            //       ),
-            //     )),
           ],
         )));
   }

@@ -30,7 +30,9 @@ class UserPage extends StatelessWidget {
               children: [
                 //moze jakis padding
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/main');
+                  },
                   icon: const Icon(Icons.home),
                   iconSize: 50,
                 ),
@@ -50,20 +52,39 @@ class UserPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //moze jakis padding
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.shopping_cart),
-                  iconSize: 50,
-                ),
-                const Text(
-                  'My Cart',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
+                  width: 200,
+                  height: 40,
+                  child: OutlinedButton(
+                      onPressed: () {},
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Colors.transparent,
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.shopping_cart,
+                            color: Colors.black,
+                            size: 40,
+                          ),
+                          SizedBox(
+                            width: 30,
+                          ),
+                          Text(
+                            'Cart',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.black,
+                            ),
+                          )
+                        ],
+                      )),
+                )
               ],
             ),
             const SizedBox(
@@ -72,42 +93,39 @@ class UserPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //moze jakis padding
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.monitor_heart),
-                  iconSize: 50,
-                ),
-                const Text(
-                  'Favorite',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //moze jakis padding
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.fire_truck),
-                  iconSize: 50,
-                ),
-                const Text(
-                  'Orders',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
+                  width: 200,
+                  height: 40,
+                  child: OutlinedButton(
+                      onPressed: () {},
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Colors.transparent,
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.fire_truck,
+                            color: Colors.black,
+                            size: 40,
+                          ),
+                          SizedBox(
+                            width: 30,
+                          ),
+                          Text(
+                            'Orders',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.black,
+                            ),
+                          )
+                        ],
+                      )),
+                )
               ],
             ),
             const SizedBox(
