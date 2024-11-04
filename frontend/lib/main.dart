@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/account_settings.dart';
+import 'package:frontend/pages/account_settings/notifications.dart';
+import 'package:frontend/pages/account_settings/payment_info.dart';
+import 'package:frontend/pages/account_settings/shipping_info.dart';
 import 'package:frontend/pages/main_screen.dart';
 import 'package:frontend/pages/sign_in.dart';
 import 'package:frontend/pages/sign_up.dart';
@@ -28,6 +32,13 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => SignUp(),
         '/main': (context) => MainScreen(),
         '/user_page': (context) => UserPage(),
+        '/account_settings': (context) => AccountSettings(),
+
+        // account settings pages
+        '/account_settings/notificationSettings': (context) => NotificationSettings(),
+        '/account_settings/shippingInfo': (context) => ShippingInfo(),
+        '/account_settings/paymentInfo': (context) => PaymentInfo(),
+        // '/account_settings/deleteAccount': (context) => DeleteAccount(),
       },
     );
   }
