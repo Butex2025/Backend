@@ -70,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
           IconButton(
             icon: Icon(Icons.person_outline),
             onPressed: () {
-              // profil
+              Navigator.pushNamed(context, '/account_settings');
             },
           ),
         ],
