@@ -2,28 +2,31 @@ spring:
   application:
     name: ButexBackend
   datasource:
-    url: jdbc:postgresql://dpg-cs8lh8bv2p9s73e3ndtg-a.frankfurt-postgres.render.com:5432/butex
-    username: butex
-    password: ${DB_PASSWORD}
+  #    url: jdbc:postgresql://dpg-cs8lh8bv2p9s73e3ndtg-a.frankfurt-postgres.render.com:5432/butex
+  #    username: butex
+  #    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/ButexDB
+    username: postgres
+    password: root
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
 furgonetka:
   environment-url: https://api.sandbox.furgonetka.pl
-  api-token: YnV0ZXgtM2M2NmRhYzdkYzEzNDQ2ZWUwNGU0MGJiZTgyYTA4Y2E6NmFlNWRkYWJiMGE3YWZlYTE2ODk2YzI5NGFkNzExZjMzMzY0ZGM0ZTQ0YWUyNzE4NjkyNzFkNWNmY2MyYjZhNQ==
+  api-token: ${FURGONETKA_API_TOKEN}
   endpoint:
     package-validate: /packages/validate
     package-create: /packages
 paynow:
   environment-url: https://api.sandbox.paynow.pl
-  api-token: 7d4e8433-240f-448d-a1c9-1f5216e13cb6
-  signature-token: df12d0d5-e701-4eb1-9ab8-797e238618a5
+  api-token: ${PAYNOW_API_TOKEN}
+  signature-token: ${PAYNOW_SIGNATURE_TOKEN}
   endpoint:
     payment-create: /v1/payments
     payment-status: /v1/payments/{paymentId}/status
 
 ButexValues:
   app:
-    jwtSecret: c8a2247d9a3906afcc05b552afdc4f4f79a511ca56af7f6591646a49a30c668c9d8f507207e1807eb78c4818f85ab9cc9f9521705d086ba5eb769231af94e4154673de083f8647900c1a615656fa6a5abb102f8dc24d5a24239da9edf4cd07fe9c945cc3be445889c8d9893284dd523bc58cf0a396329a1b7ba12ecefbdf133f
+    jwtSecret: ${JWT_SECRET}
     jwtExpirationMs: 86400000

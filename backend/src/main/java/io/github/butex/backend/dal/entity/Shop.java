@@ -3,23 +3,24 @@ package io.github.butex.backend.dal.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@ToString
+@NoArgsConstructor
+@Entity
 @Builder
-public class Product {
+@AllArgsConstructor
+public class Shop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String brand;
-    private BigDecimal price;
 
-    @Lob
-    private byte[] image;
+    private String name;
+    private String city;
+    private String street;
+    private String postcode;
+    private Double latitude;
+    private Double longitude;
+
 }

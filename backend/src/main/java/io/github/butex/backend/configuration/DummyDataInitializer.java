@@ -1,136 +1,191 @@
 package io.github.butex.backend.configuration;
 
-import io.github.butex.backend.constant.ProductColor;
-import io.github.butex.backend.constant.ProductFabric;
-import io.github.butex.backend.constant.ProductType;
-import io.github.butex.backend.dal.entity.Product;
-import io.github.butex.backend.dal.repository.ProductRepository;
+import io.github.butex.backend.dto.*;
+import io.github.butex.backend.service.*;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 public class DummyDataInitializer {
 
-    private static final List<String> BRANDS = List.of("Nike",
-            "Adidas",
-            "Puma",
-            "Reebok",
-            "Converse",
-            "New Balance",
-            "Vans",
-            "Under Armour",
-            "Timberland");
+    private final ProductColorService productColorService;
+    private final ProductFabricService productFabricService;
+    private final ProductSizeService productSizeService;
+    private final ProductTypeService productTypeService;
+    private final ShopService shopService;
+    private final ProductService productService;
+    private final ShopProductService shopProductService;
 
-    private static final Map<ProductType, String> filenameByType = Map.of(
-            ProductType.SNEAKERS, "trampki.jpg",
-            ProductType.SPORT, "sportowe.jpg",
-            ProductType.SANDALS, "kozaki.jpg"
+    private static final List<String> BRANDS = List.of("Nike", "Adidas", "Puma", "Reebok", "Converse", "New Balance", "Vans", "Under Armour", "Timberland");
+    private static final List<String> COLORS_LIST = Arrays.asList("Red", "Blue", "Green");
+    private static final List<String> FABRICS_LIST = Arrays.asList("Leather", "Cotton", "Synthetic");
+    private static final List<Double> SIZES_LIST = Arrays.asList(42.0, 43.0, 44.5);
+    private static final List<String> TYPES_LIST = Arrays.asList("Sneakers", "Boots", "Sandals");
+    private static final List<ShopDTO> SHOPS_LIST = Arrays.asList(
+            new ShopDTO(null, "Shop A", "Warsaw", "Main St", "00-001", 52.2297, 21.0122),
+            new ShopDTO(null, "Shop B", "Krakow", "Market Sq", "30-002", 50.0647, 19.9450),
+            new ShopDTO(null, "Shop C", "Gdansk", "Long St", "80-001", 54.3520, 18.6466)
     );
 
-    private final ProductRepository productRepository;
+    private final Random random = new Random();
 
-    @Bean
-    void seedFakeData() {
-        List<Product> products = new ArrayList<>();
+    private static final Map<String, String> filenameByType = Map.of(
+            "Sneakers", "trampki.jpg",
+            "Boots", "sportowe.jpg",
+            "Sandals", "kozaki.jpg"
+    );
 
+    @PostConstruct
+    public void init() {
+        initializeColors();
+        initializeFabrics();
+        initializeSizes();
+        initializeTypes();
+        initializeShops();
+
+        // Dodawanie produktów z losowymi danymi
+        List<ProductDTO> products = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
-            Product product = new Product();
-            product.setProductType(getRandomProductType());
-            product.setName(getRandomName());
-            product.setBrand(getRandomBrand());
-            product.setPrice(getRandomPrice());
-            product.setSizes(getRandomSizes());
-            product.setColors(getRandomColors());
-            product.setFabric(getRandomFabric());
-            product.setImage(getImageForType(product.getProductType()));
-            products.add(product);
+            String randomType = getRandomType();  // Wybieramy losowy typ tylko raz
+            ProductDTO product = ProductDTO.builder()
+                    .name("Product " + (i + 1))
+                    .brand(getRandomBrand())
+                    .price(getRandomPrice())
+                    .image(getImageForType(randomType))  // Ustawiamy obraz na podstawie typu
+                    .build();
+            products.add(productService.create(product));
         }
 
-        productRepository.saveAll(products);
+        products.forEach(product -> {
+            for (int j = 0; j < 5; j++) {
+                ShopProductDTO shopProduct = ShopProductDTO.builder()
+                        .shop(getRandomShopDTO())
+                        .product(product)
+                        .productColor(getRandomColorDTO())
+                        .productSize(getRandomSizeDTO())
+                        .productFabric(getRandomFabricDTO())
+                        .productType(getRandomTypeDTO())
+                        .quantity((long) (random.nextInt(50) + 1))
+                        .build();
+                try {
+                    shopProductService.create(shopProduct);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Duplicate ShopProduct combination: " + e.getMessage());
+                }
+            }
+        });
     }
 
-    private ProductType getRandomProductType() {
-        Random random = new Random();
-        ProductType[] values = ProductType.values();
-        return values[random.nextInt(values.length)];
+    private void initializeColors() {
+        COLORS_LIST.forEach(color -> {
+            try {
+                productColorService.create(new ProductColorDTO(null, color));
+            } catch (IllegalArgumentException e) {
+                System.out.println("Color already exists: " + color);
+            }
+        });
     }
 
+    private void initializeFabrics() {
+        FABRICS_LIST.forEach(fabric -> {
+            try {
+                productFabricService.create(new ProductFabricDTO(null, fabric));
+            } catch (IllegalArgumentException e) {
+                System.out.println("Fabric already exists: " + fabric);
+            }
+        });
+    }
 
-    private byte[] getImageForType(ProductType productType) {
-        try {
-            InputStream is = getClass().getResourceAsStream("/images/" + filenameByType.get(productType));
+    private void initializeSizes() {
+        SIZES_LIST.forEach(size -> {
+            try {
+                productSizeService.create(new ProductSizeDTO(null, size));
+            } catch (IllegalArgumentException e) {
+                System.out.println("Size already exists: " + size);
+            }
+        });
+    }
 
+    private void initializeTypes() {
+        TYPES_LIST.forEach(type -> {
+            try {
+                productTypeService.create(new ProductTypeDTO(null, type));
+            } catch (IllegalArgumentException e) {
+                System.out.println("Type already exists: " + type);
+            }
+        });
+    }
+
+    private void initializeShops() {
+        SHOPS_LIST.forEach(shop -> {
+            try {
+                shopService.create(shop);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Shop already exists: " + shop.getName() + ", " + shop.getCity());
+            }
+        });
+    }
+
+    private byte[] getImageForType(String type) {
+        String filename = filenameByType.get(type);
+        if (filename == null) {
+            System.out.println("Image file not found for type: " + type);
+            return null;
+        }
+
+        try (InputStream is = getClass().getResourceAsStream("/images/" + filename)) {
             if (is == null) {
+                System.out.println("Error: File " + filename + " not found in resources");
                 return null;
             }
-
             return is.readAllBytes();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            System.out.println("Error loading image: " + e.getMessage());
             return null;
         }
     }
 
-    private String getRandomName() {
-        return "Example name";
-    }
-
     private String getRandomBrand() {
-        return BRANDS.get(new Random().nextInt(BRANDS.size()));
+        return BRANDS.get(random.nextInt(BRANDS.size()));
     }
 
     private BigDecimal getRandomPrice() {
-        return BigDecimal.valueOf(new Random().nextInt(50, 700) + 0.99);
+        return BigDecimal.valueOf(50 + (random.nextDouble() * 450)).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    private List<Double> getRandomSizes() {
-        List<Double> sizes = new ArrayList<>();
-
-        for (int i = 0; i < new Random().nextInt(8); i++) {
-            double size = new Random().nextInt(37, 48);
-
-            while (sizes.contains(size)) {
-                size = new Random().nextInt(37, 48) + (double) new Random().nextInt(2) / 2;
-            }
-
-            sizes.add(size);
-        }
-
-        return sizes;
+    private String getRandomType() {
+        return TYPES_LIST.get(random.nextInt(TYPES_LIST.size()));
     }
 
-    private List<ProductColor> getRandomColors() {
-        List<ProductColor> colors = new ArrayList<>();
-
-        Random random = new Random();
-        ProductColor[] values = ProductColor.values();
-        for (int i = 0; i <= new Random().nextInt(5); i++) {
-            if (colors.size() == values.length) {
-                break;
-            }
-
-            ProductColor color = values[random.nextInt(values.length)];
-            while (colors.contains(color)) {
-                color = values[random.nextInt(values.length)];
-            }
-
-            colors.add(color);
-        }
-
-        return colors;
+    // Metody do losowego wybierania DTO z bazy danych
+    private ShopDTO getRandomShopDTO() {
+        List<ShopDTO> shops = shopService.getAll();
+        return shops.get(random.nextInt(shops.size()));
     }
 
-    private ProductFabric getRandomFabric() {
-        Random random = new Random();
-        ProductFabric[] values = ProductFabric.values();
-        return values[random.nextInt(values.length)];
+    private ProductColorDTO getRandomColorDTO() {
+        List<ProductColorDTO> colors = productColorService.getAll();
+        return colors.get(random.nextInt(colors.size()));
+    }
+
+    private ProductSizeDTO getRandomSizeDTO() {
+        List<ProductSizeDTO> sizes = productSizeService.getAll();
+        return sizes.get(random.nextInt(sizes.size()));
+    }
+
+    private ProductFabricDTO getRandomFabricDTO() {
+        List<ProductFabricDTO> fabrics = productFabricService.getAll();
+        return fabrics.get(random.nextInt(fabrics.size()));
+    }
+
+    private ProductTypeDTO getRandomTypeDTO() {
+        List<ProductTypeDTO> types = productTypeService.getAll();
+        return types.get(random.nextInt(types.size()));
     }
 }

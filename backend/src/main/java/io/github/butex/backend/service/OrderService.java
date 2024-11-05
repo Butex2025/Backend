@@ -36,7 +36,7 @@ public class OrderService {
 
         double finalPrice = 0.0;
         for (OrderProductDTO orderProduct : orderDTO.getProducts()) {
-            double partialPrice = productService.getProduct(orderProduct.getProductId()).getPrice().doubleValue() * orderProduct.getQuantity();
+            double partialPrice = productService.getById(orderProduct.getProductId()).getPrice().doubleValue() * orderProduct.getQuantity();
             finalPrice += partialPrice;
         }
 
