@@ -4,13 +4,12 @@ import io.github.butex.backend.dal.entity.*;
 import io.github.butex.backend.dal.repository.*;
 import io.github.butex.backend.dto.ShopProductDTO;
 import io.github.butex.backend.mapper.ShopProductMapper;
-import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,19 +24,26 @@ public class ShopProductService {
     private final ProductSizeRepository productSizeRepository;
     private final ProductFabricRepository productFabricRepository;
     private final ProductTypeRepository productTypeRepository;
-
     private final ShopProductMapper shopProductMapper;
+
     public ShopProductDTO create(ShopProductDTO dto) {
         // Konwersja DTO na encję
         ShopProduct shopProduct = convertToEntity(dto);
 
-        // Sprawdzenie unikalności kombinacji
-        if (exists(shopProduct)) {
-            throw new IllegalArgumentException("ShopProduct with this combination already exists.");
-        }
+        // Sprawdzenie, czy istnieje już taki rekord
+        Optional<ShopProduct> existingShopProduct = findExistingShopProduct(shopProduct);
 
-        ShopProduct savedShopProduct = shopProductRepository.save(shopProduct);
-        return shopProductMapper.shopProductToShopProductDTO(savedShopProduct);
+        if (existingShopProduct.isPresent()) {
+            // Jeśli rekord istnieje, dodajemy ilość do istniejącego rekordu
+            ShopProduct existing = existingShopProduct.get();
+            existing.setQuantity(existing.getQuantity() + shopProduct.getQuantity());
+            ShopProduct updatedShopProduct = shopProductRepository.save(existing);
+            return shopProductMapper.shopProductToShopProductDTO(updatedShopProduct);
+        } else {
+            // Jeśli rekord nie istnieje, zapisujemy nowy
+            ShopProduct savedShopProduct = shopProductRepository.save(shopProduct);
+            return shopProductMapper.shopProductToShopProductDTO(savedShopProduct);
+        }
     }
 
     public List<ShopProductDTO> getAll() {
@@ -73,9 +79,9 @@ public class ShopProductService {
                 .build();
     }
 
-    private boolean exists(ShopProduct shopProduct) {
-        // Sprawdzanie, czy istnieje rekord z tą kombinacją atrybutów
-        return shopProductRepository.existsByShopAndProductAndProductColorAndProductSizeAndProductFabricAndProductType(
+    private Optional<ShopProduct> findExistingShopProduct(ShopProduct shopProduct) {
+        // Znalezienie istniejącego rekordu na podstawie kombinacji atrybutów
+        return shopProductRepository.findByShopAndProductAndProductColorAndProductSizeAndProductFabricAndProductType(
                 shopProduct.getShop(),
                 shopProduct.getProduct(),
                 shopProduct.getProductColor(),
@@ -84,5 +90,4 @@ public class ShopProductService {
                 shopProduct.getProductType()
         );
     }
-
 }
