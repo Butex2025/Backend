@@ -49,37 +49,7 @@ public class DummyDataInitializer {
         initializeTypes();
         initializeShops();
 
-        // Dodawanie produktów z losowymi danymi
-        List<ProductDTO> products = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            String randomType = getRandomType();  // Wybieramy losowy typ tylko raz
-            ProductDTO product = ProductDTO.builder()
-                    .name("Product " + (i + 1))
-                    .brand(getRandomBrand())
-                    .price(getRandomPrice())
-                    .image(getImageForType(randomType))  // Ustawiamy obraz na podstawie typu
-                    .build();
-            products.add(productService.create(product));
-        }
-
-        products.forEach(product -> {
-            for (int j = 0; j < 5; j++) {
-                ShopProductDTO shopProduct = ShopProductDTO.builder()
-                        .shop(getRandomShopDTO())
-                        .product(product)
-                        .productColor(getRandomColorDTO())
-                        .productSize(getRandomSizeDTO())
-                        .productFabric(getRandomFabricDTO())
-                        .productType(getRandomTypeDTO())
-                        .quantity((long) (random.nextInt(50) + 1))
-                        .build();
-                try {
-                    shopProductService.create(shopProduct);
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Duplicate ShopProduct combination: " + e.getMessage());
-                }
-            }
-        });
+        initializeProducts();
     }
 
     private void initializeColors() {
@@ -128,6 +98,44 @@ public class DummyDataInitializer {
                 shopService.create(shop);
             } catch (IllegalArgumentException e) {
                 System.out.println("Shop already exists: " + shop.getName() + ", " + shop.getCity());
+            }
+        });
+    }
+
+    private void initializeProducts() {
+
+        if(!productService.getAll().isEmpty()) {
+            return;
+        }
+
+        List<ProductDTO> products = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            String randomType = getRandomType();  // Wybieramy losowy typ tylko raz
+            ProductDTO product = ProductDTO.builder()
+                    .name("Product " + (i + 1))
+                    .brand(getRandomBrand())
+                    .price(getRandomPrice())
+                    .productFabric(getRandomFabricDTO())
+                    .productType(getRandomTypeDTO())
+                    .image(getImageForType(randomType))  // Ustawiamy obraz na podstawie typu
+                    .build();
+            products.add(productService.create(product));
+        }
+
+        products.forEach(product -> {
+            for (int j = 0; j < 5; j++) {
+                ShopProductDTO shopProduct = ShopProductDTO.builder()
+                        .shop(getRandomShopDTO())
+                        .product(product)
+                        .productSize(getRandomSizeDTO())
+                        .productColor(getRandomColorDTO())
+                        .quantity((long) (random.nextInt(50) + 1))
+                        .build();
+                try {
+                    shopProductService.create(shopProduct);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Duplicate ShopProduct combination: " + e.getMessage());
+                }
             }
         });
     }

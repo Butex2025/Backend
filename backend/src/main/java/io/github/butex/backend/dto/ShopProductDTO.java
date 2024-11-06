@@ -1,5 +1,6 @@
 package io.github.butex.backend.dto;
 
+import io.github.butex.backend.dal.entity.ProductColor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +14,7 @@ public class ShopProductDTO {
     private Long id;
     private ShopDTO shop;
     private ProductDTO product;
-    private ProductColorDTO productColor;
     private ProductSizeDTO productSize;
-    private ProductFabricDTO productFabric;
-    private ProductTypeDTO productType;
+    private ProductColorDTO productColor;
     private Long quantity;
 }

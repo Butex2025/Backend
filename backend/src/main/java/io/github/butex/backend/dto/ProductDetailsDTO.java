@@ -1,8 +1,5 @@
 package io.github.butex.backend.dto;
 
-import io.github.butex.backend.constant.ProductColor;
-import io.github.butex.backend.constant.ProductFabric;
-import io.github.butex.backend.dal.entity.ProductType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,12 +12,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductDTO {
-    private Long id;
+public class ProductDetailsDTO {
+
+    private Long productId;
     private String name;
     private String brand;
     private BigDecimal price;
-    private byte[] image;
     private ProductFabricDTO productFabric;
     private ProductTypeDTO productType;
+    private byte[] image;
+
+    private List<String> colors;
+    private List<Double> sizes;
+    private List<ShopDTO> shops;
 }

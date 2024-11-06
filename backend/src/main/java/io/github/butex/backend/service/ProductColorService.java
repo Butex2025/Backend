@@ -17,6 +17,11 @@ public class ProductColorService {
     @Autowired
     private ProductColorRepository productColorRepository;
 
+    public ProductColor getOrCreate(ProductColorDTO dto) {
+        return productColorRepository.findByColor(dto.getColor())
+                .orElseGet(() -> create(dto));
+    }
+
     public ProductColor create(ProductColorDTO dto) {
         productColorRepository.findByColor(dto.getColor()).ifPresent(existing -> {
             throw new IllegalArgumentException("Color " + dto.getColor() + " already exists");

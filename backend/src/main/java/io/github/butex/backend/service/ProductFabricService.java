@@ -17,6 +17,11 @@ public class ProductFabricService {
     @Autowired
     private ProductFabricRepository productFabricRepository;
 
+    public ProductFabric getOrCreate(ProductFabricDTO dto) {
+        return productFabricRepository.findByFabric(dto.getFabric())
+                .orElseGet(() -> create(dto));
+    }
+
     public ProductFabric create(ProductFabricDTO dto) {
         productFabricRepository.findByFabric(dto.getFabric()).ifPresent(existing -> {
             throw new IllegalArgumentException("Fabric " + dto.getFabric() + " already exists");

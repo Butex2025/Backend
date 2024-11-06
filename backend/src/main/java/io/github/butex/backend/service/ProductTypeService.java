@@ -17,6 +17,12 @@ public class ProductTypeService {
     @Autowired
     private ProductTypeRepository productTypeRepository;
 
+    public ProductType getOrCreate(ProductTypeDTO dto) {
+        return productTypeRepository.findByType(dto.getType())
+                .orElseGet(() -> create(dto));
+    }
+
+    
     public ProductType create(ProductTypeDTO dto) {
         productTypeRepository.findByType(dto.getType()).ifPresent(existing -> {
             throw new IllegalArgumentException("Type " + dto.getType() + " already exists");

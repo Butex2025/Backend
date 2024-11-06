@@ -11,7 +11,7 @@ import lombok.*;
 @Entity
 @Builder
 @Table(name = "shop_product", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"product_id", "product_color_id", "product_size_id", "product_fabric_id", "product_type_id"})
+        @UniqueConstraint(columnNames = {"product_id", "product_color_id", "product_size_id"})
 })
 public class ShopProduct {
 
@@ -28,20 +28,12 @@ public class ShopProduct {
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "product_color_id", nullable = false)
-    private ProductColor productColor;
-
-    @ManyToOne
     @JoinColumn(name = "product_size_id", nullable = false)
     private ProductSize productSize;
 
     @ManyToOne
-    @JoinColumn(name = "product_fabric_id", nullable = false)
-    private ProductFabric productFabric;
-
-    @ManyToOne
-    @JoinColumn(name = "product_type_id", nullable = false)
-    private ProductType productType;
+    @JoinColumn(name = "product_color_id", nullable = false)
+    private ProductColor productColor;
 
     private Long quantity;
 

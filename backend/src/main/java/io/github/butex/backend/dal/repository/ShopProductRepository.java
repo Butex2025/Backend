@@ -9,16 +9,18 @@ import lombok.ToString;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ShopProductRepository extends JpaRepository<ShopProduct, Long> {
-    Optional<ShopProduct> findByShopAndProductAndProductColorAndProductSizeAndProductFabricAndProductType(
+
+    List<ShopProduct> findByProductId(Long productId);
+
+    Optional<ShopProduct> findByShopAndProductAndProductSizeAndProductColor(
             Shop shop,
             Product product,
-            ProductColor productColor,
             ProductSize productSize,
-            ProductFabric productFabric,
-            ProductType productType
+            ProductColor productColor
     );
 }
