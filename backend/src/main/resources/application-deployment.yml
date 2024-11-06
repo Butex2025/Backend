@@ -7,7 +7,7 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
 
 furgonetka:
   environment-url: https://api.sandbox.furgonetka.pl
