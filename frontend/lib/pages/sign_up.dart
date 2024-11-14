@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cubit/access_cubit.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -29,10 +31,11 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading:IconButton(
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/signin');
-          },
+        leading: IconButton(
+          onPressed: ()=> moveToLogIn(context),
+          // onPressed: () {
+          //   Navigator.pushReplacementNamed(context, '/signin');
+          // },
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
       ),
@@ -49,7 +52,7 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               const Text(
-              'Lets Create Account Together',
+                'Lets Create Account Together',
                 style: TextStyle(
                   fontSize: 20,
                 ),
@@ -178,9 +181,9 @@ class _SignUpState extends State<SignUp> {
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
-                            passVisibility
-                                ? passVisibility = false
-                                : passVisibility = true;
+                          passVisibility
+                              ? passVisibility = false
+                              : passVisibility = true;
                         });
                       },
                       icon: passVisibility
@@ -202,9 +205,10 @@ class _SignUpState extends State<SignUp> {
                 width: 350,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    print('Name: $name, Email: $email, Pass: $password');
-                  },
+                  onPressed:() => registerAccount(context,name,email,password),
+                  // onPressed: () {
+                  //   print('Name: $name, Email: $email, Pass: $password');
+                  // },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                   ),
@@ -232,9 +236,10 @@ class _SignUpState extends State<SignUp> {
                         fontSize: 10,
                       ),
                     ),
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, '/signin');
-                    },
+                    onTap: () => moveToLogIn(context),
+                    // onTap: () {
+                    //   Navigator.pushReplacementNamed(context, '/signin');
+                    // },
                   ),
                 ],
               ),
@@ -244,4 +249,14 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+}
+
+registerAccount(BuildContext context,String name, String email, String password) {
+  final pokeCubit = BlocProvider.of<AccessCubit>(context);
+  pokeCubit.register(name,email,password);
+}
+
+moveToLogIn(BuildContext context) {
+  final pokeCubit = BlocProvider.of<AccessCubit>(context);
+  pokeCubit.moveToLog();
 }

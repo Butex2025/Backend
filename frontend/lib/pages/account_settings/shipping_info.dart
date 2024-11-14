@@ -5,8 +5,8 @@ class ShippingInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double paddingHorizontal = screenWidth * 0.04;
+    // final double screenWidth = MediaQuery.of(context).size.width;
+    // final double paddingHorizontal = screenWidth * 0.04;
 
     return Scaffold(
       appBar: AppBar(

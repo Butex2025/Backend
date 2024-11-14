@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cubit/access_cubit.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -161,10 +163,11 @@ class _SignInState extends State<SignIn> {
                 width: 350,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    print('Email: $email Password: $password');
-                    Navigator.pushReplacementNamed(context, '/main');
-                  },
+                  onPressed: ()=>logIn(context,email,password),
+                  // onPressed: () {
+                  //   print('Email: $email Password: $password');
+                  //   Navigator.pushReplacementNamed(context, '/main');
+                  // },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                   ),
@@ -192,9 +195,10 @@ class _SignInState extends State<SignIn> {
                         fontSize: 10,
                       ),
                     ),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/signup');
-                    },
+                    onTap: () => moveToRegister(context),
+
+                      //Navigator.pushNamed(context, '/signup');
+                    
                   ),
                 ],
               ),
@@ -204,4 +208,14 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+}
+
+logIn(BuildContext context,String email,String password){
+  final pokeCubit = BlocProvider.of<AccessCubit>(context);
+  pokeCubit.logIn(email,password);
+}
+
+moveToRegister(BuildContext context) {
+  final pokeCubit = BlocProvider.of<AccessCubit>(context);
+  pokeCubit.moveToRegister();
 }
