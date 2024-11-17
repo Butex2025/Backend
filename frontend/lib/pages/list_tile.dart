@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'dart:typed_data';
 
 class ListTileCustom extends StatefulWidget {
   final String name;
@@ -105,6 +104,7 @@ class _ListTileState extends State<ListTileCustom> {
               right: 0,
               child: GestureDetector(
                 onTap: () {
+                  print('dziala');
                   // tu pozniej dodac route do cart screen
                 },
                 child: ClipRRect(

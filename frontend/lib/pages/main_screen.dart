@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cubit/shop_cubit.dart';
 import 'package:frontend/data/model/product.dart';
+import 'package:frontend/pages/cart.dart';
 import 'package:frontend/pages/list_tile.dart';
 
 class MainScreen extends StatefulWidget {
@@ -44,7 +45,10 @@ class _MainScreenState extends State<MainScreen> {
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
             onPressed: () {
-              // cart
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Cart()),
+              );
             },
           ),
           IconButton(
@@ -88,25 +92,27 @@ class _MainScreenState extends State<MainScreen> {
           ),
           Expanded(
             child: ListView.builder(
-                itemCount: widget.shopList.length,
-                itemBuilder: (context, index) {
-                  final item = widget.shopList[index];
-                  return GestureDetector(
-                    onTap: () => moveToDetailScreen(context,item,widget.shopList),
-                    child: ListTileCustom(
-                        name: item.name,
-                        price: item.price,
-                        photo: item.image,
-                        paddingHorizontal: paddingHorizontal,
-                        screenHeight: screenHeight,
-                        screenWidth: screenWidth,
-                        paddingVertical: paddingVertical,
-                        buttonSize: buttonSize,
-                        containerHeight: containerHeight,
-                        imageHeight: imageHeight,
-                        imageWidth: imageWidth),
-                  );
-                }),
+              itemCount: widget.shopList.length,
+              itemBuilder: (context, index) {
+                final item = widget.shopList[index];
+                return GestureDetector(
+                  onTap: () =>
+                      moveToDetailScreen(context, item, widget.shopList),
+                  child: ListTileCustom(
+                      name: item.name,
+                      price: item.price,
+                      photo: item.image,
+                      paddingHorizontal: paddingHorizontal,
+                      screenHeight: screenHeight,
+                      screenWidth: screenWidth,
+                      paddingVertical: paddingVertical,
+                      buttonSize: buttonSize,
+                      containerHeight: containerHeight,
+                      imageHeight: imageHeight,
+                      imageWidth: imageWidth),
+                );
+              },
+            ),
           )
         ],
       ),
@@ -114,9 +120,10 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-moveToDetailScreen(BuildContext context,ProductModel product,List<ProductModel> list) {
+moveToDetailScreen(
+    BuildContext context, ProductModel product, List<ProductModel> list) {
   final pokeCubit = BlocProvider.of<ShopCubit>(context);
-  pokeCubit.detailScreen(product,list);
+  pokeCubit.detailScreen(product, list);
 }
 
 

@@ -164,43 +164,43 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    children: availableColors.map((color) {
-                      bool isSelected = color == selectedColor;
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedColor = color;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: color,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: isSelected ? Colors.blue : Colors.transparent,
-                                width: 2,
-                              ),
-                              boxShadow: isSelected
-                                  ? [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.3),
-                                        blurRadius: 10,
-                                        spreadRadius: 1,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ]
-                                  : [],
-                            ),
-                            width: 36,
-                            height: 36,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                  // Row(
+                  //   children: availableColors.map((color) {
+                  //     bool isSelected = color == selectedColor;
+                  //     return Padding(
+                  //       padding: const EdgeInsets.only(right: 8.0),
+                  //       child: GestureDetector(
+                  //         onTap: () {
+                  //           setState(() {
+                  //             selectedColor = color;
+                  //           });
+                  //         },
+                  //         child: Container(
+                  //           decoration: BoxDecoration(
+                  //             color: color,
+                  //             shape: BoxShape.circle,
+                  //             border: Border.all(
+                  //               color: isSelected ? Colors.blue : Colors.transparent,
+                  //               width: 2,
+                  //             ),
+                  //             boxShadow: isSelected
+                  //                 ? [
+                  //                     BoxShadow(
+                  //                       color: Colors.black.withOpacity(0.3),
+                  //                       blurRadius: 10,
+                  //                       spreadRadius: 1,
+                  //                       offset: const Offset(0, 4),
+                  //                     ),
+                  //                   ]
+                  //                 : [],
+                  //           ),
+                  //           width: 36,
+                  //           height: 36,
+                  //         ),
+                  //       ),
+                  //     );
+                  //   }).toList(),
+                  // ),
                   const Spacer(),
                   // Add to Cart Button
                   Padding(
