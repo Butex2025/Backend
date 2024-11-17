@@ -2,8 +2,8 @@ spring:
   application:
     name: ButexBackend
   datasource:
-    url: jdbc:postgresql://dpg-cs8lh8bv2p9s73e3ndtg-a:5432/butex
-    username: butex
+    url: jdbc:postgresql://dpg-cssu7q23esus739qg6i0-a:5432/butex_m2mu
+    username: butex_m2mu_user
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
