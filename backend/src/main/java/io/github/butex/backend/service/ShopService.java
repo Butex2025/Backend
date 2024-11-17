@@ -19,6 +19,10 @@ public class ShopService {
     @Autowired
     private ShopRepository shopRepository;
 
+    public List<Shop> getAllShops(){
+        return shopRepository.findAll();
+    }
+
     public Shop create(ShopDTO dto) {
         shopRepository.findByNameAndCityAndStreet(dto.getName(), dto.getCity(), dto.getStreet()).ifPresent(existing -> {
             throw new IllegalArgumentException("Shop " + dto.getName() + " in " + dto.getCity() + " already exists at " + dto.getStreet());
