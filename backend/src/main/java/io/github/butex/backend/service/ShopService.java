@@ -1,33 +1,33 @@
 package io.github.butex.backend.service;
 
 
-
-
 import io.github.butex.backend.dal.entity.Shop;
 import io.github.butex.backend.dal.repository.ShopRepository;
 import io.github.butex.backend.dto.ShopDTO;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.github.butex.backend.exception.DataAlreadyExistException;
+import io.github.butex.backend.exception.DataNotFoundException;
+import io.github.butex.backend.mapper.ShopMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class ShopService {
-    @Autowired
-    private ShopRepository shopRepository;
 
-    public List<Shop> getAllShops(){
-        return shopRepository.findAll();
+    private final ShopRepository shopRepository;
+    private final ShopMapper shopMapper;
+
+    public List<ShopDTO> getAllShops() {
+        return shopMapper.shopListToShopDTOLis(shopRepository.findAll());
     }
 
-    public Shop create(ShopDTO dto) {
+    public ShopDTO create(ShopDTO dto) {
         shopRepository.findByNameAndCityAndStreet(dto.getName(), dto.getCity(), dto.getStreet()).ifPresent(existing -> {
-            throw new IllegalArgumentException("Shop " + dto.getName() + " in " + dto.getCity() + " already exists at " + dto.getStreet());
+            throw new DataAlreadyExistException("Shop " + dto.getName() + " in " + dto.getCity() + " already exists at " + dto.getStreet());
         });
-
 
         Shop shop = Shop.builder()
                 .name(dto.getName())
@@ -37,44 +37,26 @@ public class ShopService {
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
                 .build();
-        return shopRepository.save(shop);
+        return shopMapper.shopToShopDTO(shopRepository.save(shop));
 
     }
 
-    // Znajdowanie sklepu według ID
-    // Znajdowanie sklepu według ID
     public ShopDTO getById(Long id) {
         return shopRepository.findById(id)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new IllegalArgumentException("Shop not found with id: " + id));
+                .map(shopMapper::shopToShopDTO)
+                .orElseThrow(() -> new DataNotFoundException("Shop not found with id: " + id));
     }
 
-    // Pobieranie wszystkich sklepów
     public List<ShopDTO> getAll() {
         return shopRepository.findAll()
                 .stream()
-                .map(this::convertToDTO)
+                .map(shopMapper::shopToShopDTO)
                 .collect(Collectors.toList());
     }
 
-    // Znajdowanie sklepu według nazwy, miasta i ulicy
     public ShopDTO getByNameAndCityAndStreet(String name, String city, String street) {
         return shopRepository.findByNameAndCityAndStreet(name, city, street)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new IllegalArgumentException("Shop not found with name: " + name + ", city: " + city + ", street: " + street));
+                .map(shopMapper::shopToShopDTO)
+                .orElseThrow(() -> new DataNotFoundException(String.format("Shop not found with name: %s, city: %s, street: %s", name, city, street)));
     }
-
-    // Metoda pomocnicza do konwersji encji na DTO
-    private ShopDTO convertToDTO(Shop shop) {
-        return new ShopDTO(
-                shop.getId(),
-                shop.getName(),
-                shop.getCity(),
-                shop.getStreet(),
-                shop.getPostcode(),
-                shop.getLatitude(),
-                shop.getLongitude()
-        );
-    }
-
 }

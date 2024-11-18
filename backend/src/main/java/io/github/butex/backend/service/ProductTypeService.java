@@ -3,7 +3,11 @@ package io.github.butex.backend.service;
 import io.github.butex.backend.dal.entity.ProductType;
 import io.github.butex.backend.dal.repository.ProductTypeRepository;
 import io.github.butex.backend.dto.ProductTypeDTO;
+import io.github.butex.backend.exception.DataAlreadyExistException;
+import io.github.butex.backend.exception.DataNotFoundException;
+import io.github.butex.backend.mapper.ProductTypeMapper;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,21 +15,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class ProductTypeService {
 
-    @Autowired
-    private ProductTypeRepository productTypeRepository;
-
-    public ProductType getOrCreate(ProductTypeDTO dto) {
-        return productTypeRepository.findByType(dto.getType())
-                .orElseGet(() -> create(dto));
-    }
-
+    private final ProductTypeRepository productTypeRepository;
+    private final ProductTypeMapper productTypeMapper;
     
     public ProductType create(ProductTypeDTO dto) {
         productTypeRepository.findByType(dto.getType()).ifPresent(existing -> {
-            throw new IllegalArgumentException("Type " + dto.getType() + " already exists");
+            throw new DataAlreadyExistException("Type " + dto.getType() + " already exists");
         });
 
         ProductType productType = ProductType.builder()
@@ -35,19 +33,19 @@ public class ProductTypeService {
     }
     public List<ProductTypeDTO> getAll() {
         return productTypeRepository.findAll().stream()
-                .map(type -> new ProductTypeDTO(type.getId(), type.getType()))
+                .map(productTypeMapper::productTypeToProductTypeDTO)
                 .collect(Collectors.toList());
     }
 
     public ProductTypeDTO getById(Long id) {
         return productTypeRepository.findById(id)
-                .map(type -> new ProductTypeDTO(type.getId(), type.getType()))
-                .orElse(null); // Możesz zamienić na wyjątek, jeśli wymagane
+                .map(productTypeMapper::productTypeToProductTypeDTO)
+                .orElseThrow(() -> new DataNotFoundException(String.format("Size id %s not exists", id)));
     }
 
     public ProductTypeDTO getByType(String type) {
         return productTypeRepository.findByType(type)
-                .map(t -> new ProductTypeDTO(t.getId(), t.getType()))
-                .orElse(null); // Możesz zamienić na wyjątek, jeśli wymagane
+                .map(productTypeMapper::productTypeToProductTypeDTO)
+                .orElseThrow(() -> new DataNotFoundException(String.format("Size %s not exists", type)));
     }
 }

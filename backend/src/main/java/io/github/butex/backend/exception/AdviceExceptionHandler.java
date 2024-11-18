@@ -20,6 +20,16 @@ public class AdviceExceptionHandler {
 
     @ExceptionHandler({UserExistException.class})
     public ResponseEntity<MessageError> userExistException(UserExistException ex, WebRequest request) {
+        return prepareErrorResponseEntity(HttpStatus.CONFLICT, ex, request);
+    }
+
+    @ExceptionHandler({DataAlreadyExistException.class})
+    public ResponseEntity<MessageError> userExistException(DataAlreadyExistException ex, WebRequest request) {
+        return prepareErrorResponseEntity(HttpStatus.CONFLICT, ex, request);
+    }
+
+    @ExceptionHandler({DataBadRequestException.class})
+    public ResponseEntity<MessageError> userExistException(DataBadRequestException ex, WebRequest request) {
         return prepareErrorResponseEntity(HttpStatus.BAD_REQUEST, ex, request);
     }
 

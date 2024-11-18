@@ -3,6 +3,9 @@ package io.github.butex.backend.service;
 import io.github.butex.backend.dal.entity.ProductSize;
 import io.github.butex.backend.dal.repository.ProductSizeRepository;
 import io.github.butex.backend.dto.ProductSizeDTO;
+import io.github.butex.backend.exception.DataAlreadyExistException;
+import io.github.butex.backend.exception.DataNotFoundException;
+import io.github.butex.backend.mapper.ProductSizeMapper;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,15 +19,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class ProductSizeService {
 
-    @Autowired
-    private ProductSizeRepository productSizeRepository;
+    private final ProductSizeRepository productSizeRepository;
+    private final ProductSizeMapper productSizeMapper;
 
+    @Transactional
     public ProductSize create(ProductSizeDTO dto) {
         productSizeRepository.findBySize(dto.getSize()).ifPresent(existing -> {
-            throw new IllegalArgumentException("Size " + dto.getSize() + " already exists");
+            throw new DataAlreadyExistException("Size " + dto.getSize() + " already exists");
         });
 
         ProductSize productSize = ProductSize.builder()
@@ -35,19 +39,19 @@ public class ProductSizeService {
 
     public List<ProductSizeDTO> getAll() {
         return productSizeRepository.findAll().stream()
-                .map(size -> new ProductSizeDTO(size.getId(), size.getSize()))
+                .map(productSizeMapper::productSizeToProductSizeDTO)
                 .collect(Collectors.toList());
     }
 
     public ProductSizeDTO getById(Long id) {
         return productSizeRepository.findById(id)
-                .map(size -> new ProductSizeDTO(size.getId(), size.getSize()))
-                .orElse(null); // Możesz zamienić na wyjątek, jeśli wymagane
+                .map(productSizeMapper::productSizeToProductSizeDTO)
+                .orElseThrow(() -> new DataNotFoundException(String.format("Size id %s not exists", id)));
     }
 
     public ProductSizeDTO getBySize(Double size) {
         return productSizeRepository.findBySize(size)
-                .map(s -> new ProductSizeDTO(s.getId(), s.getSize()))
-                .orElse(null); // Możesz zamienić na wyjątek, jeśli wymagane
+                .map(productSizeMapper::productSizeToProductSizeDTO)
+                .orElseThrow(() -> new DataNotFoundException(String.format("Size %s not exists", size)));
     }
 }

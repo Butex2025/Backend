@@ -3,7 +3,11 @@ package io.github.butex.backend.service;
 import io.github.butex.backend.dal.entity.ProductColor;
 import io.github.butex.backend.dal.repository.ProductColorRepository;
 import io.github.butex.backend.dto.ProductColorDTO;
+import io.github.butex.backend.exception.DataAlreadyExistException;
+import io.github.butex.backend.exception.DataNotFoundException;
+import io.github.butex.backend.mapper.ProductColorMapper;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,20 +15,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class ProductColorService {
 
-    @Autowired
-    private ProductColorRepository productColorRepository;
+    private final ProductColorRepository productColorRepository;
+    private final ProductColorMapper productColorMapper;
 
-    public ProductColor getOrCreate(ProductColorDTO dto) {
-        return productColorRepository.findByColor(dto.getColor())
-                .orElseGet(() -> create(dto));
-    }
-
+    @Transactional
     public ProductColor create(ProductColorDTO dto) {
         productColorRepository.findByColor(dto.getColor()).ifPresent(existing -> {
-            throw new IllegalArgumentException("Color " + dto.getColor() + " already exists");
+            throw new DataAlreadyExistException("Color " + dto.getColor() + " already exists");
         });
 
         ProductColor productColor = ProductColor.builder()
@@ -35,20 +35,20 @@ public class ProductColorService {
 
     public List<ProductColorDTO> getAll() {
         return productColorRepository.findAll().stream()
-                .map(color -> new ProductColorDTO(color.getId(), color.getColor()))
+                .map(productColorMapper::productColorToProductColorDTO)
                 .collect(Collectors.toList());
     }
 
     public ProductColorDTO getById(Long id) {
         return productColorRepository.findById(id)
-                .map(color -> new ProductColorDTO(color.getId(), color.getColor()))
-                .orElse(null); // Możesz zamienić na wyjątek, jeśli wymagane
+                .map(productColorMapper::productColorToProductColorDTO)
+                .orElseThrow(() -> new DataNotFoundException(String.format("Color id %s not exists", id)));
     }
 
     public ProductColorDTO getByColor(String color) {
         return productColorRepository.findByColor(color)
-                .map(c -> new ProductColorDTO(c.getId(), c.getColor()))
-                .orElse(null); // Możesz zamienić na wyjątek, jeśli wymagane
+                .map(productColorMapper::productColorToProductColorDTO)
+                .orElseThrow(() -> new DataNotFoundException(String.format("Color %s not exists", color)));
     }
 
 }

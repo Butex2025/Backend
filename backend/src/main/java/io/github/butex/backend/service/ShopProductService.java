@@ -5,8 +5,11 @@ import io.github.butex.backend.dal.repository.*;
 import io.github.butex.backend.dto.ProductDetailsDTO;
 import io.github.butex.backend.dto.ShopDTO;
 import io.github.butex.backend.dto.ShopProductDTO;
+import io.github.butex.backend.exception.DataBadRequestException;
+import io.github.butex.backend.exception.DataNotFoundException;
 import io.github.butex.backend.mapper.ProductFabricMapper;
 import io.github.butex.backend.mapper.ProductTypeMapper;
+import io.github.butex.backend.mapper.ShopMapper;
 import io.github.butex.backend.mapper.ShopProductMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +20,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class ShopProductService {
 
@@ -30,7 +32,9 @@ public class ShopProductService {
     private final ShopProductMapper shopProductMapper;
     private final ProductFabricMapper productFabricMapper;
     private final ProductTypeMapper productTypeMapper;
+    private final ShopMapper shopMapper;
 
+    @Transactional
     public ShopProductDTO create(ShopProductDTO dto) {
         ShopProduct shopProduct = convertToEntity(dto);
 
@@ -55,15 +59,14 @@ public class ShopProductService {
     }
 
     private ShopProduct convertToEntity(ShopProductDTO dto) {
-        // Pobieranie encji na podstawie ID z DTO, konwersja na encję
         Shop shop = shopRepository.findById(dto.getShop().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Shop not found with id: " + dto.getShop().getId()));
+                .orElseThrow(() -> new DataBadRequestException("Shop not found with id: " + dto.getShop().getId()));
         Product product = productRepository.findById(dto.getProduct().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + dto.getProduct().getId()));
+                .orElseThrow(() -> new DataBadRequestException("Product not found with id: " + dto.getProduct().getId()));
         ProductSize size = productSizeRepository.findById(dto.getProductSize().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Size not found with id: " + dto.getProductSize().getId()));
+                .orElseThrow(() -> new DataBadRequestException("Size not found with id: " + dto.getProductSize().getId()));
         ProductColor color = productColorRepository.findById(dto.getProductColor().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Color not found with id: " + dto.getProductColor().getId()));
+                .orElseThrow(() -> new DataBadRequestException("Color not found with id: " + dto.getProductColor().getId()));
 
         return ShopProduct.builder()
                 .shop(shop)
@@ -75,7 +78,6 @@ public class ShopProductService {
     }
 
     private Optional<ShopProduct> findExistingShopProduct(ShopProduct shopProduct) {
-        // Znalezienie istniejącego rekordu na podstawie kombinacji atrybutów
         return shopProductRepository.findByShopAndProductAndProductSizeAndProductColor(
                 shopProduct.getShop(),
                 shopProduct.getProduct(),
@@ -85,16 +87,16 @@ public class ShopProductService {
     }
 
     public ProductDetailsDTO getProductDetailsById(Long productId) {
-        List<ShopProduct> shopProducts = shopProductRepository.findByProductId(productId);
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new DataBadRequestException(String.format("Product %s not found", productId)));
+
+        List<ShopProduct> shopProducts = shopProductRepository.findByProduct(product);
 
         if (shopProducts.isEmpty()) {
-            throw new IllegalArgumentException("Product with ID " + productId + " not found");
+            throw new DataNotFoundException("Product with ID " + productId + " not found");
         }
 
-        // Zakładamy, że wszystkie rekordy odnoszą się do tego samego produktu
-        var product = shopProducts.get(0).getProduct();
-
-        // Zbiór unikalnych kolorów, rozmiarów i sklepów
         List<String> colors = shopProducts.stream()
                 .map(sp -> sp.getProductColor().getColor())
                 .distinct()
@@ -108,15 +110,7 @@ public class ShopProductService {
         List<ShopDTO> shops = shopProducts.stream()
                 .map(ShopProduct::getShop)
                 .distinct()
-                .map(shop -> ShopDTO.builder()
-                        .id(shop.getId())
-                        .name(shop.getName())
-                        .city(shop.getCity())
-                        .street(shop.getStreet())
-                        .postcode(shop.getPostcode())
-                        .latitude(shop.getLatitude())
-                        .longitude(shop.getLongitude())
-                        .build())
+                .map(shopMapper::shopToShopDTO)
                 .collect(Collectors.toList());
 
         return ProductDetailsDTO.builder()

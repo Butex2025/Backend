@@ -56,7 +56,7 @@ public class DummyDataInitializer {
         COLORS_LIST.forEach(color -> {
             try {
                 productColorService.create(new ProductColorDTO(null, color));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
                 System.out.println("Color already exists: " + color);
             }
         });
@@ -66,7 +66,7 @@ public class DummyDataInitializer {
         FABRICS_LIST.forEach(fabric -> {
             try {
                 productFabricService.create(new ProductFabricDTO(null, fabric));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
                 System.out.println("Fabric already exists: " + fabric);
             }
         });
@@ -76,7 +76,7 @@ public class DummyDataInitializer {
         SIZES_LIST.forEach(size -> {
             try {
                 productSizeService.create(new ProductSizeDTO(null, size));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
                 System.out.println("Size already exists: " + size);
             }
         });
@@ -86,7 +86,7 @@ public class DummyDataInitializer {
         TYPES_LIST.forEach(type -> {
             try {
                 productTypeService.create(new ProductTypeDTO(null, type));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
                 System.out.println("Type already exists: " + type);
             }
         });
@@ -96,7 +96,7 @@ public class DummyDataInitializer {
         SHOPS_LIST.forEach(shop -> {
             try {
                 shopService.create(shop);
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
                 System.out.println("Shop already exists: " + shop.getName() + ", " + shop.getCity());
             }
         });
@@ -110,14 +110,14 @@ public class DummyDataInitializer {
 
         List<ProductDTO> products = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
-            String randomType = getRandomType();  // Wybieramy losowy typ tylko raz
+            String randomType = getRandomType();
             ProductDTO product = ProductDTO.builder()
                     .name("Product " + (i + 1))
                     .brand(getRandomBrand())
                     .price(getRandomPrice())
                     .productFabric(getRandomFabricDTO())
                     .productType(getRandomTypeDTO())
-                    .image(getImageForType(randomType))  // Ustawiamy obraz na podstawie typu
+                    .image(getImageForType(randomType))
                     .build();
             products.add(productService.create(product));
         }
