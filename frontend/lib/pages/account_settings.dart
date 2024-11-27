@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/account_settings/notifications.dart';
 import 'package:frontend/pages/account_settings/payment_info.dart';
 import 'package:frontend/pages/account_settings/shipping_info.dart';
 import 'package:frontend/pages/main_load.dart';
@@ -16,7 +15,7 @@ class AccountSettings extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const MainLoad()));
           }
@@ -28,8 +27,8 @@ class AccountSettings extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: paddingHorizontal),
         child: ListView(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
                 "Account",
                 style: TextStyle(
@@ -63,8 +62,8 @@ class AccountSettings extends StatelessWidget {
               },
             ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
                 "App settings",
                 style: TextStyle(
@@ -122,8 +121,7 @@ class AccountSettings extends StatelessWidget {
       },
     );
   }
-
-  // Helper function for list items with navigation arrows
+  
   Widget _buildListItem(BuildContext context,
       {required IconData icon, required String title, required VoidCallback onTap}) {
     return ListTile(
@@ -142,7 +140,6 @@ class AccountSettings extends StatelessWidget {
     );
   }
 
-  // Helper function for switch items
   Widget _buildSwitchItem(
     BuildContext context, {
     required IconData icon,
