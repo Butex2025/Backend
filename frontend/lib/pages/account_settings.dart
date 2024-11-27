@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/account_settings/notifications.dart';
+import 'package:frontend/pages/account_settings/payment_info.dart';
+import 'package:frontend/pages/account_settings/shipping_info.dart';
+import 'package:frontend/pages/main_load.dart';
+import 'package:frontend/pages/main_screen.dart';
 
 class AccountSettings extends StatelessWidget {
   const AccountSettings({super.key});
@@ -12,7 +17,9 @@ class AccountSettings extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pushNamed(context, '/main'),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const MainLoad()));
+          }
         ),
         title: Text("Account & Settings"),
         centerTitle: true,
@@ -33,18 +40,10 @@ class AccountSettings extends StatelessWidget {
             ),
             _buildListItem(
               context,
-              icon: Icons.notifications_outlined,
-              title: "Notification setting",
-              onTap: () {
-                Navigator.pushNamed(context, '/account_settings/notificationSettings');
-              },
-            ),
-            _buildListItem(
-              context,
               icon: Icons.local_shipping_outlined,
               title: "Shipping address",
               onTap: () {
-                Navigator.pushNamed(context, '/account_settings/shippingInfo');
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ShippingInfo()));
               },
             ),
             _buildListItem(
@@ -52,7 +51,7 @@ class AccountSettings extends StatelessWidget {
               icon: Icons.payment_outlined,
               title: "Payment info",
               onTap: () {
-                Navigator.pushNamed(context, '/account_settings/paymentInfo');
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentInfo()));
               },
             ),
             _buildListItem(

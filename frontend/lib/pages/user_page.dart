@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/main_load.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
@@ -31,7 +32,7 @@ class UserPage extends StatelessWidget {
                 //moze jakis padding
                 IconButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/main');
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const MainLoad()));
                   },
                   icon: const Icon(Icons.home),
                   iconSize: 50,

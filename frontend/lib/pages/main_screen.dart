@@ -4,9 +4,11 @@ import 'package:frontend/cubit/cart_cubit.dart';
 import 'package:frontend/cubit/shop_cubit.dart';
 import 'package:frontend/data/model/cart.dart';
 import 'package:frontend/data/model/product.dart';
+import 'package:frontend/pages/account_settings.dart';
 import 'package:frontend/pages/cart.dart';
 import 'package:frontend/pages/lists_tile/list_tile.dart';
 import 'package:frontend/pages/logic/cart_logic.dart';
+import 'package:frontend/pages/user_page.dart';
 
 class MainScreen extends StatefulWidget {
   final List<ProductModel> shopList;
@@ -41,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
         leading: IconButton(
           icon: const Icon(Icons.menu_rounded),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/user_page');
+             Navigator.push(context, MaterialPageRoute(builder: (context) => const UserPage()));
           },
         ),
         actions: [
@@ -52,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
           IconButton(
             icon: const Icon(Icons.person_outline),
             onPressed: () {
-              Navigator.pushNamed(context, '/account_settings');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AccountSettings()));
             },
           ),
         ],
