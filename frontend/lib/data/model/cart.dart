@@ -1,6 +1,6 @@
 class CartModel {
   final int id;
-  final double size;
+  final int size;
   final double price;
   final String name;
   final int count;
@@ -19,7 +19,7 @@ class CartModel {
         id: json['id'],
         count: json['count'],
         name: json['name'],
-        photo: json['pohot'],
+        photo: json['photo'],
         price: json['price'],
         size: json['size'],
       );

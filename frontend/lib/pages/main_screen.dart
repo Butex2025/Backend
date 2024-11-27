@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cubit/cart_cubit.dart';
 import 'package:frontend/cubit/shop_cubit.dart';
+import 'package:frontend/data/model/cart.dart';
 import 'package:frontend/data/model/product.dart';
 import 'package:frontend/pages/cart.dart';
-import 'package:frontend/pages/list_tile.dart';
+import 'package:frontend/pages/lists_tile/list_tile.dart';
+import 'package:frontend/pages/logic/cart_logic.dart';
 
 class MainScreen extends StatefulWidget {
   final List<ProductModel> shopList;
@@ -44,12 +47,7 @@ class _MainScreenState extends State<MainScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Cart()),
-              );
-            },
+            onPressed: () => test(context),
           ),
           IconButton(
             icon: const Icon(Icons.person_outline),
@@ -99,6 +97,7 @@ class _MainScreenState extends State<MainScreen> {
                   onTap: () =>
                       moveToDetailScreen(context, item, widget.shopList),
                   child: ListTileCustom(
+                      id: item.id,
                       name: item.name,
                       price: item.price,
                       photo: item.image,
@@ -120,64 +119,37 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
+test(BuildContext context) async {
+  // Navigator.push(
+  //   context,
+  //   MaterialPageRoute(
+  //     builder: (context) => CartLogic(
+  //       cartCubit: context.read<CartCubit>(),
+  //     ),
+  //   ),
+  // );
+
+  // Navigator.push(
+  //   context,
+  //   MaterialPageRoute(
+  //     builder: (context) => CartLogic(),
+  //   ),
+  // );
+  final cartCubit = BlocProvider.of<CartCubit>(context);
+  //cartCubit.clearCart();
+  List<CartModel> itemsL = await cartCubit.loadCart();
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Cart(
+        items: itemsL,
+      ),
+    ),
+  );
+}
+
 moveToDetailScreen(
     BuildContext context, ProductModel product, List<ProductModel> list) {
   final pokeCubit = BlocProvider.of<ShopCubit>(context);
   pokeCubit.detailScreen(product, list);
 }
-
-
-// CustomScrollView(
-//         slivers: [
-//           // search
-//           SliverToBoxAdapter(
-//             child: Padding(
-//               padding: EdgeInsets.all(paddingHorizontal),
-//               child: DecoratedBox(
-//                 decoration: BoxDecoration(
-//                   boxShadow: [
-//                     BoxShadow(
-//                       color: Colors.black.withOpacity(0.11),
-//                       blurRadius: 40,
-//                       spreadRadius: 0.0,
-//                     ),
-//                   ],
-//                 ),
-//                 child: TextField(
-//                   decoration: InputDecoration(
-//                     hintText: 'Search shoes',
-//                     prefixIcon: Icon(Icons.search),
-//                     filled: true,
-//                     fillColor: Colors.white,
-//                     contentPadding: EdgeInsets.symmetric(
-//                         vertical: 0.0, horizontal: paddingHorizontal),
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(screenWidth * 0.05),
-//                       borderSide: BorderSide.none,
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ),
-//           // lista kontenerow na buty
-//           // https://api.flutter.dev/flutter/widgets/SliverToBoxAdapter-class.html
-//           SliverList(
-//             delegate: SliverChildBuilderDelegate(
-//               (context, index) {
-//                 final shoe = widget.shopList[index];
-//                 return ListView.builder(itemCount: pokemonList.length,
-//       itemBuilder: (context, index) {
-//         final item = pokemonList[index];
-//         return BlocProvider(
-//           key: Key(item.name),
-//           create: (context) => TileCubit(PokeRepository()),
-//           child: PokeListTile(pokemon: item),
-//         );
-//       },)
-//               },
-//               childCount: widget.shopList.length,
-//             ),
-//           ),
-//         ],
-//       ),

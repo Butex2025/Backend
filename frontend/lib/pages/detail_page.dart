@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cubit/cart_cubit.dart';
 import 'package:frontend/cubit/shop_cubit.dart';
+import 'package:frontend/data/model/cart.dart';
 import 'package:frontend/data/model/product.dart';
 import 'package:frontend/pages/cart.dart';
+import 'package:frontend/pages/logic/cart_logic.dart';
 
 class DetailPage extends StatefulWidget {
   final ProductModel product;
@@ -22,7 +25,11 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   List<int> availableSizes = [39, 40, 41];
-  List<Color> availableColors = [Colors.white, Colors.black, Colors.blue];
+  List<Color> availableColors = [
+    Colors.white,
+    Colors.black,
+    Colors.blue,
+  ];
   int selectedSize = 40;
   Color selectedColor = Colors.white;
 
@@ -45,10 +52,8 @@ class _DetailPageState extends State<DetailPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_bag_outlined),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const Cart()),);
-            },
-          ),
+            onPressed: () => test(context),
+          )
         ],
         centerTitle: true,
         title: const Text("Product Details"),
@@ -78,7 +83,7 @@ class _DetailPageState extends State<DetailPage> {
                     base64Decode(widget.product.image),
                     fit: BoxFit.cover,
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.45, 
+                    height: MediaQuery.of(context).size.height * 0.45,
                   ),
                 ),
               ),
@@ -103,7 +108,7 @@ class _DetailPageState extends State<DetailPage> {
                       color: Colors.grey[800],
                     ),
                   ),
-                  const SizedBox(height: 8), 
+                  const SizedBox(height: 8),
                   const Text(
                     'Size',
                     style: TextStyle(
@@ -125,7 +130,8 @@ class _DetailPageState extends State<DetailPage> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: isSelected ? Colors.blue : Colors.grey[300],
+                              color:
+                                  isSelected ? Colors.blue : Colors.grey[300],
                               shape: BoxShape.circle,
                               boxShadow: isSelected
                                   ? [
@@ -144,9 +150,11 @@ class _DetailPageState extends State<DetailPage> {
                               child: Text(
                                 size.toString(),
                                 style: TextStyle(
-                                  color: isSelected ? Colors.white : Colors.black,
-                                  fontWeight:
-                                      isSelected ? FontWeight.bold : FontWeight.normal,
+                                  color:
+                                      isSelected ? Colors.white : Colors.black,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                 ),
                               ),
                             ),
@@ -156,13 +164,13 @@ class _DetailPageState extends State<DetailPage> {
                     }).toList(),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Color',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
+                  // const Text(
+                  //   'Color',
+                  //   style: TextStyle(
+                  //     fontWeight: FontWeight.bold,
+                  //     fontSize: 18,
+                  //   ),
+                  // ),
                   const SizedBox(height: 8),
                   // Row(
                   //   children: availableColors.map((color) {
@@ -208,15 +216,14 @@ class _DetailPageState extends State<DetailPage> {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          // add to cart logika
-                        },
+                        onPressed: () =>
+                            addToCart(context, selectedSize, widget.product),
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          backgroundColor: Colors.blue, 
+                          backgroundColor: Colors.blue,
                         ),
                         child: const Text(
                           'Add To Cart',
@@ -242,3 +249,37 @@ class _DetailPageState extends State<DetailPage> {
     pokeCubit.moveBackToMainScreen(list);
   }
 }
+
+test(BuildContext context) async {
+  final cartCubit = BlocProvider.of<CartCubit>(context);
+  List<CartModel> itemsL = await cartCubit.loadCart();
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Cart(
+        items: itemsL,
+      ),
+    ),
+  );
+}
+
+addToCart(BuildContext context, int rozmiar, ProductModel product) {
+  final cartCubit = BlocProvider.of<CartCubit>(context);
+  cartCubit.addToCart(CartModel(
+      id: product.id,
+      count: 1,
+      name: product.name,
+      photo: product.image,
+      price: product.price,
+      size: rozmiar));
+}
+
+
+//  Navigator.push(
+//                     context,
+//                     MaterialPageRoute(
+//                       builder: (context) => CartLogic(
+//                         cartCubit: context.read<CartCubit>(),
+//                       ),
+//                     ),
+//                   )),

@@ -32,7 +32,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: ()=> moveToLogIn(context),
+          onPressed: () => moveToLogIn(context),
           // onPressed: () {
           //   Navigator.pushReplacementNamed(context, '/signin');
           // },
@@ -205,10 +205,8 @@ class _SignUpState extends State<SignUp> {
                 width: 350,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed:() => registerAccount(context,name,email,password),
-                  // onPressed: () {
-                  //   print('Name: $name, Email: $email, Pass: $password');
-                  // },
+                  onPressed: () =>
+                      registerAccount(context, name, email, password),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                   ),
@@ -251,9 +249,10 @@ class _SignUpState extends State<SignUp> {
   }
 }
 
-registerAccount(BuildContext context,String name, String email, String password) {
+registerAccount(
+    BuildContext context, String name, String email, String password) {
   final pokeCubit = BlocProvider.of<AccessCubit>(context);
-  pokeCubit.register(name,email,password);
+  pokeCubit.register(name, email, password);
 }
 
 moveToLogIn(BuildContext context) {

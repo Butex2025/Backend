@@ -18,4 +18,4 @@ class MainLoad extends StatelessWidget {
     );
 
   }
-}
+} 

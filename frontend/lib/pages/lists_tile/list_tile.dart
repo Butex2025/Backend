@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cubit/cart_cubit.dart';
+import 'package:frontend/data/model/cart.dart';
 import 'dart:convert';
 
+import 'package:frontend/data/model/product.dart';
+
 class ListTileCustom extends StatefulWidget {
+  final int id;
   final String name;
   final double price;
   final String photo;
@@ -16,6 +22,7 @@ class ListTileCustom extends StatefulWidget {
 
   const ListTileCustom({
     super.key,
+    required this.id,
     required this.name,
     required this.price,
     required this.photo,
@@ -103,10 +110,13 @@ class _ListTileState extends State<ListTileCustom> {
               bottom: 0,
               right: 0,
               child: GestureDetector(
-                onTap: () {
-                  print('dziala');
-                  // tu pozniej dodac route do cart screen
-                },
+                onTap: () => addToCart(
+                  context,
+                  widget.id,
+                  widget.name,
+                  widget.price,
+                  widget.photo,
+                ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(widget.screenWidth * 0.05),
@@ -131,6 +141,23 @@ class _ListTileState extends State<ListTileCustom> {
         ),
       ),
     );
-    ;
+  }
+
+  addToCart(
+    BuildContext context,
+    int id,
+    String name,
+    double price,
+    String image,
+  ) {
+    final cartCubit = BlocProvider.of<CartCubit>(context);
+    cartCubit.addToCart(CartModel(
+      id: id,
+      count: 1,
+      name: name,
+      photo: image,
+      price: price,
+      size: 43,
+    ));
   }
 }

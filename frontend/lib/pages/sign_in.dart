@@ -45,7 +45,7 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               const Text(
-              'Welcome Back Youve Been Missed!',
+                'Welcome Back Youve Been Missed!',
                 style: TextStyle(
                   fontSize: 20,
                 ),
@@ -153,7 +153,7 @@ class _SignInState extends State<SignIn> {
                 children: [
                   GestureDetector(
                     child: const Text('Recovery Password'),
-                  onTap: () {},
+                    onTap: () {},
                   ),
                   const SizedBox(width: 30),
                 ],
@@ -163,11 +163,7 @@ class _SignInState extends State<SignIn> {
                 width: 350,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: ()=>logIn(context,email,password),
-                  // onPressed: () {
-                  //   print('Email: $email Password: $password');
-                  //   Navigator.pushReplacementNamed(context, '/main');
-                  // },
+                  onPressed: () => logIn(context, email, password),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                   ),
@@ -182,7 +178,7 @@ class _SignInState extends State<SignIn> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                  'Dont Have An Account?   ',
+                    'Dont Have An Account?   ',
                     style: TextStyle(
                       fontSize: 10,
                     ),
@@ -197,8 +193,7 @@ class _SignInState extends State<SignIn> {
                     ),
                     onTap: () => moveToRegister(context),
 
-                      //Navigator.pushNamed(context, '/signup');
-                    
+                    //Navigator.pushNamed(context, '/signup');
                   ),
                 ],
               ),
@@ -210,9 +205,9 @@ class _SignInState extends State<SignIn> {
   }
 }
 
-logIn(BuildContext context,String email,String password){
+logIn(BuildContext context, String email, String password) {
   final pokeCubit = BlocProvider.of<AccessCubit>(context);
-  pokeCubit.logIn(email,password);
+  pokeCubit.logIn(email, password);
 }
 
 moveToRegister(BuildContext context) {
