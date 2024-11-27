@@ -1,11 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:frontend/pages/account_settings/payment_info.dart';
 import 'package:frontend/pages/account_settings/shipping_info.dart';
 import 'package:frontend/pages/main_load.dart';
-import 'package:frontend/pages/main_screen.dart';
 
-class AccountSettings extends StatelessWidget {
+class AccountSettings extends StatefulWidget {
   const AccountSettings({super.key});
+
+  @override
+  State<AccountSettings> createState() => _AccountSettingsState();
+}
+
+class _AccountSettingsState extends State<AccountSettings> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  bool _pushNotifications = false;
+  bool _locationServices = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSwitchStates();
+  }
+
+  Future<void> _loadSwitchStates() async {
+    final pushNotifications = await _storage.read(key: 'push_notifications') ?? 'false';
+    final locationServices = await _storage.read(key: 'location_services') ?? 'false';
+
+    setState(() {
+      _pushNotifications = pushNotifications == 'true';
+      _locationServices = locationServices == 'true';
+    });
+  }
+
+  Future<void> _saveSwitchState(String key, bool value) async {
+    await _storage.write(key: key, value: value.toString());
+  }
+
+  void _showNotification(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _togglePushNotifications(bool value) {
+    setState(() {
+      _pushNotifications = value;
+    });
+    _saveSwitchState('push_notifications', value);
+
+    final message = value ? 'Push notifications enabled' : 'Push notifications disabled';
+    _showNotification(context, message);
+  }
+
+  void _toggleLocationServices(bool value) {
+    setState(() {
+      _locationServices = value;
+    });
+    _saveSwitchState('location_services', value);
+
+    final message = value ? 'Location services enabled' : 'Location services disabled';
+    _showNotification(context, message);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +77,9 @@ class AccountSettings extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const MainLoad()));
-          }
+          },
         ),
-        title: Text("Account & Settings"),
+        title: const Text("Account & Settings"),
         centerTitle: true,
       ),
       body: Padding(
@@ -42,7 +101,8 @@ class AccountSettings extends StatelessWidget {
               icon: Icons.local_shipping_outlined,
               title: "Shipping address",
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const ShippingInfo()));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => const ShippingInfo()));
               },
             ),
             _buildListItem(
@@ -50,7 +110,8 @@ class AccountSettings extends StatelessWidget {
               icon: Icons.payment_outlined,
               title: "Payment info",
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentInfo()));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => const PaymentInfo()));
               },
             ),
             _buildListItem(
@@ -61,7 +122,6 @@ class AccountSettings extends StatelessWidget {
                 _showDeleteConfirmationDialog(context);
               },
             ),
-
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
@@ -76,17 +136,15 @@ class AccountSettings extends StatelessWidget {
               context,
               icon: Icons.notifications_active_outlined,
               title: "Enable push notifications",
-              onChanged: (value) {
-                // tu trzeba zapytac o uprawnienia do notyfikacji
-              },
+              value: _pushNotifications,
+              onChanged: _togglePushNotifications,
             ),
             _buildSwitchItem(
               context,
               icon: Icons.location_on_outlined,
               title: "Enable location services",
-              onChanged: (value) {
-                //  tu trzeba zapytac o uprawnienia do lokalizacji
-              },
+              value: _locationServices,
+              onChanged: _toggleLocationServices,
             ),
           ],
         ),
@@ -94,23 +152,22 @@ class AccountSettings extends StatelessWidget {
     );
   }
 
-
   void _showDeleteConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete Account'),
-          content: Text('Are you sure you want to delete your account?'),
+          title: const Text('Delete Account'),
+          content: const Text('Are you sure you want to delete your account?'),
           actions: [
             TextButton(
-              child: Text('No'),
+              child: const Text('No'),
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Yes'),
+              child: const Text('Yes'),
               onPressed: () {
                 Navigator.of(context).pop();
                 // tu trzeba usunac konto
@@ -121,21 +178,21 @@ class AccountSettings extends StatelessWidget {
       },
     );
   }
-  
+
   Widget _buildListItem(BuildContext context,
       {required IconData icon, required String title, required VoidCallback onTap}) {
     return ListTile(
       leading: Icon(icon, color: Colors.blue),
       title: Text(
         title,
-        style: TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16),
       ),
-      trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
       onTap: onTap,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       tileColor: Colors.white,
     );
   }
@@ -144,31 +201,24 @@ class AccountSettings extends StatelessWidget {
     BuildContext context, {
     required IconData icon,
     required String title,
+    required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    bool switchValue = false;
-    return StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
-        return ListTile(
-          leading: Icon(icon, color: Colors.blue),
-          title: Text(
-            title,
-            style: TextStyle(fontSize: 16),
-          ),
-          trailing: Switch.adaptive(
-            value: switchValue,
-            onChanged: (value) {
-              setState(() => switchValue = value);
-              onChanged(value);
-            },
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          tileColor: Colors.white,
-        );
-      },
+    return ListTile(
+      leading: Icon(icon, color: Colors.blue),
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 16),
+      ),
+      trailing: Switch.adaptive(
+        value: value,
+        onChanged: onChanged,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      tileColor: Colors.white,
     );
   }
 }
