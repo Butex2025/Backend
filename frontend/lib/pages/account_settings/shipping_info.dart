@@ -34,16 +34,30 @@ class _ShippingInfoState extends State<ShippingInfo> {
   }
 
   Future<void> _saveShippingInfo() async {
+    if (!_validatePostalCode(_postalCodeController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid postal code format (00-000)')),
+      );
+      return;
+    }
+
     await _storage.write(key: 'street', value: _streetController.text);
     await _storage.write(key: 'building_number', value: _buildingNumberController.text);
     await _storage.write(key: 'postal_code', value: _postalCodeController.text);
     await _storage.write(key: 'city', value: _cityController.text);
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Shipping information saved')),
     );
+
     setState(() {
       _isEditing = false;
     });
+  }
+
+  bool _validatePostalCode(String postalCode) {
+    final postalCodeRegExp = RegExp(r'^\d{2}-\d{3}$');
+    return postalCodeRegExp.hasMatch(postalCode);
   }
 
   Widget _buildField(String label, TextEditingController controller) {
@@ -56,21 +70,50 @@ class _ShippingInfoState extends State<ShippingInfo> {
         labelStyle: const TextStyle(color: Colors.blue),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: _isEditing ? Colors.grey : Colors.blue, 
+            color: _isEditing ? Colors.grey : Colors.blue,
           ),
         ),
         disabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.blue, 
-          ),
+          borderSide: BorderSide(color: Colors.blue),
         ),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.blue, 
-            width: 2.0,
-          ),
+          borderSide: BorderSide(color: Colors.blue, width: 2.0),
         ),
       ),
+    );
+  }
+
+  Widget _buildPostalCodeField() {
+    return TextField(
+      controller: _postalCodeController,
+      enabled: _isEditing,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        _PostalCodeInputFormatter(),
+      ],
+      style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        labelText: "Postal Code",
+        labelStyle: const TextStyle(color: Colors.blue),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: _isEditing ? Colors.grey : Colors.blue,
+          ),
+        ),
+        disabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue, width: 2.0),
+        ),
+        errorText: _validatePostalCode(_postalCodeController.text)
+            ? null
+            : "Invalid postal code format (00-000)",
+      ),
+      onChanged: (_) {
+        setState(() {});
+      },
     );
   }
 
@@ -96,7 +139,7 @@ class _ShippingInfoState extends State<ShippingInfo> {
             const SizedBox(height: 16),
             _buildField("Building Number", _buildingNumberController),
             const SizedBox(height: 16),
-            _buildField("Postal Code", _postalCodeController),
+            _buildPostalCodeField(),
             const SizedBox(height: 16),
             _buildField("City", _cityController),
             const SizedBox(height: 32),
@@ -111,23 +154,39 @@ class _ShippingInfoState extends State<ShippingInfo> {
                     });
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  backgroundColor: Colors.blue,
-                ),
-                child: Text(_isEditing ? "Save" : "Edit",
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  ),),
+                child: Text(_isEditing ? "Save" : "Edit"),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PostalCodeInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text;
+
+    final digitsOnly = text.replaceAll(RegExp(r'\D'), '');
+
+    String formatted = '';
+    for (int i = 0; i < digitsOnly.length; i++) {
+      if (i == 2) formatted += '-';
+      formatted += digitsOnly[i];
+    }
+
+    if (formatted.length > 6) {
+      formatted = formatted.substring(0, 6);
+    }
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }
