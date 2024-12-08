@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../secure_storage_manager.dart';
 
 class PaymentInfo extends StatefulWidget {
   const PaymentInfo({super.key});
@@ -9,7 +9,7 @@ class PaymentInfo extends StatefulWidget {
 }
 
 class _PaymentInfoState extends State<PaymentInfo> {
-  final _storage = const FlutterSecureStorage();
+  final _storageManager = SecureStorageManager.instance;
 
   final _nameController = TextEditingController();
   final _cardNumberController = TextEditingController();
@@ -24,19 +24,21 @@ class _PaymentInfoState extends State<PaymentInfo> {
   }
 
   Future<void> _loadPaymentInfo() async {
-    _nameController.text = await _storage.read(key: 'name') ?? '';
-    _cardNumberController.text = await _storage.read(key: 'card_number') ?? '';
-    _expiryDateController.text = await _storage.read(key: 'expiry_date') ?? '';
+    _nameController.text = await _storageManager.read('name') ?? '';
+    _cardNumberController.text = await _storageManager.read('card_number') ?? '';
+    _expiryDateController.text = await _storageManager.read('expiry_date') ?? '';
     setState(() {});
   }
 
   Future<void> _savePaymentInfo() async {
-    await _storage.write(key: 'name', value: _nameController.text);
-    await _storage.write(key: 'card_number', value: _cardNumberController.text);
-    await _storage.write(key: 'expiry_date', value: _expiryDateController.text);
+    await _storageManager.write('name', _nameController.text);
+    await _storageManager.write('card_number', _cardNumberController.text);
+    await _storageManager.write('expiry_date', _expiryDateController.text);
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Payment information saved')),
     );
+
     setState(() {
       _isEditing = false;
     });
@@ -46,10 +48,10 @@ class _PaymentInfoState extends State<PaymentInfo> {
     return TextField(
       controller: controller,
       enabled: _isEditing,
-      style: const TextStyle(color: Colors.black), 
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.blue), 
+        labelStyle: const TextStyle(color: Colors.blue),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: _isEditing ? Colors.grey : Colors.blue,
@@ -57,12 +59,12 @@ class _PaymentInfoState extends State<PaymentInfo> {
         ),
         disabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.blue, 
+            color: Colors.blue,
           ),
         ),
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.blue, 
+            color: Colors.blue,
             width: 2.0,
           ),
         ),
@@ -112,11 +114,13 @@ class _PaymentInfoState extends State<PaymentInfo> {
                   ),
                   backgroundColor: Colors.blue,
                 ),
-                child: Text(_isEditing ? "Save" : "Edit",  
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  ),),
+                child: Text(
+                  _isEditing ? "Save" : "Edit",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ],
