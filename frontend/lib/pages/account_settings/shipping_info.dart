@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../secure_storage_manager.dart';
+import '../logic/secure_storage_manager.dart';
 
 class ShippingInfo extends StatefulWidget {
   const ShippingInfo({super.key});
