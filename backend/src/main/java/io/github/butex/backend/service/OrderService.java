@@ -3,6 +3,8 @@ package io.github.butex.backend.service;
 import io.github.butex.backend.client.FurgonetkaClient;
 import io.github.butex.backend.constant.DeliveryService;
 import io.github.butex.backend.dal.entity.Order;
+import io.github.butex.backend.dal.entity.OrderStatus;
+import io.github.butex.backend.dal.entity.Payment;
 import io.github.butex.backend.dal.repository.OrderRepository;
 import io.github.butex.backend.dto.OrderDTO;
 import io.github.butex.backend.dto.OrderProductDTO;
@@ -11,20 +13,26 @@ import io.github.butex.backend.dto.furgonetka.FurgonetkaPackagePickupDTO;
 import io.github.butex.backend.dto.furgonetka.FurgonetkaPackageReceiverDTO;
 import io.github.butex.backend.dto.furgonetka.FurgonetkaPackageRequestDTO;
 import io.github.butex.backend.mapper.OrderMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
+    private static final String CONFIRMED_STATUS = "CONFIRMED";
+
     private final OrderRepository orderRepository;
     private final FurgonetkaClient furgonetkaClient;
     private final OrderMapper orderMapper;
     private final ProductService productService;
+    private final PaymentServiceHelper paymentServiceHelper;
 
     public Order getOrder(Long id) {
         return orderRepository.findById(id).orElse(null);
@@ -100,5 +108,62 @@ public class OrderService {
                 .parcels(furgonetkaPackageDTOList)
                 .type("package")
                 .build();
+    }
+
+
+    public List<Order> getAllOrder() {
+        return orderRepository.findAll();
+    }
+
+    public List<Order> getAllOrdersWithStatus(final Collection<OrderStatus> orderStatus) {
+        return orderRepository.findAllByStatusIn(orderStatus);
+    }
+
+    public List<Order> getAllUserOrdersNotWithStatus(final String email, final Collection<OrderStatus> orderStatus) {
+        return orderRepository.findAllByEmailAndStatusNotIn(email, orderStatus);
+    }
+
+    @Transactional
+    public Order changeOrderStatus(final Long orderProductId, OrderStatus status) {
+        Order orderProduct = getOrder(orderProductId);
+        if (orderProductId == null) {
+            return null;
+        }
+        orderProduct.setStatus(status);
+        return orderRepository.save(orderProduct);
+    }
+
+    @Transactional
+    public void checkPaymentStatus() {
+        List<Order> orderProductList = getAllOrdersWithStatus(
+                Arrays.asList(OrderStatus.PROCESSING, OrderStatus.PAYMENT_PENDING)
+        );
+
+        for (Order order : orderProductList) {
+            switch (order.getStatus()) {
+                case PROCESSING -> {
+                    //find payment
+                    Payment payment = paymentServiceHelper.getPaymentByOrderId(order.getId());
+                    if (payment != null) {
+                        changeOrderStatus(order.getId(), OrderStatus.PAYMENT_PENDING);
+                    }
+                }
+                case PAYMENT_PENDING -> {
+                    Payment payment = paymentServiceHelper.getPaymentByOrderId(order.getId());
+                    if (payment != null && payment.getStatus().equals(CONFIRMED_STATUS)) {
+                        changeOrderStatus(order.getId(), OrderStatus.PAYMENT_COMPLETED);
+                        //ready to do staff
+                    }
+                }
+            }
+        }
+
+    }
+
+    public List<Order> getUserNotConfirmedOrders(String email) {
+        return getAllUserOrdersNotWithStatus(
+                email,
+                Arrays.asList(OrderStatus.DELIVERED, OrderStatus.DELIVERY_FAILED, OrderStatus.CANCELED, OrderStatus.RETURNED)
+        );
     }
 }

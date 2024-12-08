@@ -1,14 +1,7 @@
 package io.github.butex.backend.dal.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,5 +33,8 @@ public class Order {
     private String phoneNumber;
     private String service;
     private Double finalPrice;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.PROCESSING;
 
 }
