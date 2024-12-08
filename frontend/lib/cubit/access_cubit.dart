@@ -1,14 +1,16 @@
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
-
+import '../pages/logic/secure_storage_manager.dart';
 part 'access_state.dart';
 
 class AccessCubit extends Cubit<AccessState> {
   AccessCubit() : super(const AccessInit()) {
     testConnection();
   }
+
+  final _secureStorageManager = SecureStorageManager.instance;
+
 
   Future<void> testConnection() async {
     emit(const Splash());
@@ -54,7 +56,17 @@ class AccessCubit extends Cubit<AccessState> {
     );
 
     if (response.statusCode == 200) {
-      emit(const UserIn());
+      final responseBody = jsonDecode(response.body);
+      final token = responseBody['token'];
+      if (token != null) {
+        await _secureStorageManager.write('auth_token', token);
+        print("Jest Token");
+        emit(const UserIn());
+      }
+      else {
+        print("NIe ma token");
+        print("Response body: ${responseBody}");
+      }
     } else {
       print('Error: ${response.statusCode}');
       print('Response body: ${response.body}');
@@ -76,7 +88,17 @@ class AccessCubit extends Cubit<AccessState> {
     );
 
     if (response.statusCode == 200) {
-      emit(const UserIn());
+      final responseBody = jsonDecode(response.body);
+      final token = responseBody['token'];
+      if (token != null) {
+        await _secureStorageManager.write('auth_token', token);
+        print("Jest Token");
+        emit(const UserIn());
+      }
+      else {
+        print("NIe ma token");
+        print("Response body: ${responseBody}");
+      }
     } else {
       print('porblem z logowaniem');
     }
