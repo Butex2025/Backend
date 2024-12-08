@@ -40,25 +40,48 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu_rounded),
-          onPressed: () {
-             Navigator.push(context, MaterialPageRoute(builder: (context) => const UserPage()));
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined),
-            onPressed: () => test(context),
-          ),
-          IconButton(
-            icon: const Icon(Icons.person_outline),
+          leading: IconButton(
+            icon: const Icon(Icons.menu_rounded),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const AccountSettings()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const UserPage()));
             },
           ),
-        ],
-      ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.shopping_cart_outlined),
+              // onPressed: () => Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => CartLogic(
+              //       // cartCubit: context.read<CartCubit>(),
+              //       //bloc provider of CC
+              //       //dopisanie metoda od dopisania
+              //     ),
+              //   ),
+              // ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => CartCubit(),
+                    child: const CartLogic(),
+                  ),
+                ),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.person_outline),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AccountSettings(),
+                  ),
+                );
+              },
+            ),
+          ]),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -119,35 +142,6 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-}
-
-test(BuildContext context) async {
-  // Navigator.push(
-  //   context,
-  //   MaterialPageRoute(
-  //     builder: (context) => CartLogic(
-  //       cartCubit: context.read<CartCubit>(),
-  //     ),
-  //   ),
-  // );
-
-  // Navigator.push(
-  //   context,
-  //   MaterialPageRoute(
-  //     builder: (context) => CartLogic(),
-  //   ),
-  // );
-  final cartCubit = BlocProvider.of<CartCubit>(context);
-  //cartCubit.clearCart();
-  List<CartModel> itemsL = await cartCubit.loadCart();
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => Cart(
-        items: itemsL,
-      ),
-    ),
-  );
 }
 
 moveToDetailScreen(

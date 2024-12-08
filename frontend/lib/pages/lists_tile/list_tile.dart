@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cubit/cart_cubit.dart';
+import 'package:frontend/cubit/shop_cubit.dart';
 import 'package:frontend/data/model/cart.dart';
 import 'dart:convert';
-
-import 'package:frontend/data/model/product.dart';
 
 class ListTileCustom extends StatefulWidget {
   final int id;
@@ -150,7 +149,7 @@ class _ListTileState extends State<ListTileCustom> {
     double price,
     String image,
   ) {
-    final cartCubit = BlocProvider.of<CartCubit>(context);
+    final cartCubit = BlocProvider.of<ShopCubit>(context);
     cartCubit.addToCart(CartModel(
       id: id,
       count: 1,

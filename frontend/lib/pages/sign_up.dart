@@ -33,9 +33,6 @@ class _SignUpState extends State<SignUp> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => moveToLogIn(context),
-          // onPressed: () {
-          //   Navigator.pushReplacementNamed(context, '/signin');
-          // },
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
       ),
@@ -235,9 +232,6 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                     onTap: () => moveToLogIn(context),
-                    // onTap: () {
-                    //   Navigator.pushReplacementNamed(context, '/signin');
-                    // },
                   ),
                 ],
               ),

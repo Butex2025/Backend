@@ -192,8 +192,6 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
                     onTap: () => moveToRegister(context),
-
-                    //Navigator.pushNamed(context, '/signup');
                   ),
                 ],
               ),

@@ -1,12 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:frontend/data/model/cart.dart';
 import 'package:frontend/data/model/product.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'shop_state.dart';
 
 class ShopCubit extends Cubit<ShopState> {
+  Timer? intervalTimer;
+
   ShopCubit() : super(const ShopInit()) {
     getAllItems();
   }
@@ -33,11 +38,41 @@ class ShopCubit extends Cubit<ShopState> {
     }
   }
 
-  Future<void> detailScreen(ProductModel product,List<ProductModel> list ) async {
-    emit(MoveToDetailScreen(product,list ));
+  Future<void> addToCart(CartModel item) async {
+    final SharedPreferences db = await SharedPreferences.getInstance();
+
+    final List<String> savedItems = db.getStringList('items') ?? [];
+
+    final List<CartModel> items = savedItems
+        .map(
+          (item) => CartModel.fromJson(jsonDecode(item)),
+        )
+        .toList();
+
+    items.add(item);
+
+    List<String> readyToSave = items
+        .map(
+          (item) => jsonEncode(item.toJson()),
+        )
+        .toList();
+
+    db.setStringList('items', readyToSave);
+    return;
+  }
+
+  Future<void> detailScreen(
+      ProductModel product, List<ProductModel> list) async {
+    emit(MoveToDetailScreen(product, list));
   }
 
   Future<void> moveBackToMainScreen(List<ProductModel> list) async {
     emit(MainList(list));
+  }
+
+  @override
+  Future<void> close() {
+    intervalTimer?.cancel();
+    return super.close();
   }
 }

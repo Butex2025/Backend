@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:frontend/pages/account_settings/payment_info.dart';
 import 'package:frontend/pages/account_settings/shipping_info.dart';
-import 'package:frontend/pages/main_load.dart';
 
 class AccountSettings extends StatefulWidget {
   const AccountSettings({super.key});
@@ -76,7 +75,7 @@ class _AccountSettingsState extends State<AccountSettings> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const MainLoad()));
+            Navigator.pop(context);
           },
         ),
         title: const Text("Account & Settings"),

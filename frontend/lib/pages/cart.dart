@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cubit/cart_cubit.dart';
 import 'package:frontend/data/model/cart.dart';
 import 'package:frontend/pages/lists_tile/cart_tile.dart';
 
@@ -35,7 +37,7 @@ class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    // final double paddingHorizontal = screenWidth * 0.04;
+    final double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -49,21 +51,19 @@ class _CartState extends State<Cart> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 600,
-            child: Expanded(
-              child: ListView.builder(
-                itemCount: widget.items.length,
-                itemBuilder: (context, index) {
-                  final item = widget.items[index];
-                  return ProductTile(
-                    name: item.name,
-                    price: item.price,
-                    imageUrl: item.photo,
-                    initialQuantity: item.count,
-                  );
-                },
-              ),
+          Expanded(
+            flex: 2,
+            child: ListView.builder(
+              itemCount: widget.items.length,
+              itemBuilder: (context, index) {
+                final item = widget.items[index];
+                return ProductTile(
+                  name: item.name,
+                  price: item.price,
+                  imageUrl: item.photo,
+                  initialQuantity: item.count,
+                );
+              },
             ),
           ),
           SizedBox(
@@ -137,7 +137,7 @@ class _CartState extends State<Cart> {
             width: 330,
             height: 50,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () => moveToMapScreen(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.lightBlue,
               ),
@@ -150,8 +150,14 @@ class _CartState extends State<Cart> {
               ),
             ),
           ),
+          SizedBox(height: screenHeight * 0.05),
         ],
       ),
     );
   }
+}
+
+moveToMapScreen(BuildContext context) {
+  final cartCubit = BlocProvider.of<CartCubit>(context);
+  cartCubit.getLocationOfShops();
 }

@@ -14,43 +14,6 @@ class _SplashPageState extends State<SplashPage> {
     //waitForServer();
   }
 
-  // void waitForServer() async {
-  //   final url = Uri.parse('https://butex.onrender.com/api/v1/hello-world/all');
-  //   final response = await http.get(
-  //     url,
-  //     headers: {
-  //       'accept': '*/*',
-  //     },
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     Navigator.of(context).pushNamed('/signin');
-  //   } else {
-  //     showErrorPop();
-  //   }
-  // }
-
-  // void showErrorPop() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Błąd połączenia'),
-  //         content: const Text(
-  //             'Nie udało się połączyć z serwerem. Spróbuj ponownie później.'),
-  //         actions: [
-  //           TextButton(
-  //             child: const Text('OK'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

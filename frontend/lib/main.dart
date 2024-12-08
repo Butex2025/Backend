@@ -22,30 +22,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-// MaterialApp(
-//         debugShowCheckedModeBanner: false,
-//         title: 'Butex',
-//         theme: ThemeData(
-//           primarySwatch: Colors.blue,
-//         ),
-//         initialRoute: '/',
-//         // https://docs.flutter.dev/cookbook/navigation/named-routes
-//         routes: {
-//           '/': (context) => SplashPage(),
-//           '/signin': (context) => SignIn(),
-//           '/signup': (context) => SignUp(),
-//           '/main': (context) => MainScreen(),
-//           '/user_page': (context) => UserPage(),
-//           '/account_settings': (context) => AccountSettings(),
-
-//           // account settings pages
-//           '/account_settings/notificationSettings': (context) =>
-//               NotificationSettings(),
-//           '/account_settings/shippingInfo': (context) => ShippingInfo(),
-//           '/account_settings/paymentInfo': (context) => PaymentInfo(),
-//           // '/account_settings/deleteAccount': (context) => DeleteAccount(),
-//         },
-//       ),

@@ -6,7 +6,6 @@ import 'package:frontend/cubit/cart_cubit.dart';
 import 'package:frontend/cubit/shop_cubit.dart';
 import 'package:frontend/data/model/cart.dart';
 import 'package:frontend/data/model/product.dart';
-import 'package:frontend/pages/cart.dart';
 import 'package:frontend/pages/logic/cart_logic.dart';
 
 class DetailPage extends StatefulWidget {
@@ -52,7 +51,15 @@ class _DetailPageState extends State<DetailPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_bag_outlined),
-            onPressed: () => test(context),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => CartCubit(),
+                  child: const CartLogic(),
+                ),
+              ),
+            ),
           )
         ],
         centerTitle: true,
@@ -172,43 +179,6 @@ class _DetailPageState extends State<DetailPage> {
                   //   ),
                   // ),
                   const SizedBox(height: 8),
-                  // Row(
-                  //   children: availableColors.map((color) {
-                  //     bool isSelected = color == selectedColor;
-                  //     return Padding(
-                  //       padding: const EdgeInsets.only(right: 8.0),
-                  //       child: GestureDetector(
-                  //         onTap: () {
-                  //           setState(() {
-                  //             selectedColor = color;
-                  //           });
-                  //         },
-                  //         child: Container(
-                  //           decoration: BoxDecoration(
-                  //             color: color,
-                  //             shape: BoxShape.circle,
-                  //             border: Border.all(
-                  //               color: isSelected ? Colors.blue : Colors.transparent,
-                  //               width: 2,
-                  //             ),
-                  //             boxShadow: isSelected
-                  //                 ? [
-                  //                     BoxShadow(
-                  //                       color: Colors.black.withOpacity(0.3),
-                  //                       blurRadius: 10,
-                  //                       spreadRadius: 1,
-                  //                       offset: const Offset(0, 4),
-                  //                     ),
-                  //                   ]
-                  //                 : [],
-                  //           ),
-                  //           width: 36,
-                  //           height: 36,
-                  //         ),
-                  //       ),
-                  //     );
-                  //   }).toList(),
-                  // ),
                   const Spacer(),
                   // Add to Cart Button
                   Padding(
@@ -250,21 +220,8 @@ class _DetailPageState extends State<DetailPage> {
   }
 }
 
-test(BuildContext context) async {
-  final cartCubit = BlocProvider.of<CartCubit>(context);
-  List<CartModel> itemsL = await cartCubit.loadCart();
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => Cart(
-        items: itemsL,
-      ),
-    ),
-  );
-}
-
 addToCart(BuildContext context, int rozmiar, ProductModel product) {
-  final cartCubit = BlocProvider.of<CartCubit>(context);
+  final cartCubit = BlocProvider.of<ShopCubit>(context);
   cartCubit.addToCart(CartModel(
       id: product.id,
       count: 1,
@@ -273,13 +230,3 @@ addToCart(BuildContext context, int rozmiar, ProductModel product) {
       price: product.price,
       size: rozmiar));
 }
-
-
-//  Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                       builder: (context) => CartLogic(
-//                         cartCubit: context.read<CartCubit>(),
-//                       ),
-//                     ),
-//                   )),
