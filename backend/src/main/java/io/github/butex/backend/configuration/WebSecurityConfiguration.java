@@ -49,6 +49,7 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/hello-world/all").permitAll()
                                 .requestMatchers("/api/v1/auth/*").permitAll()
                                 .requestMatchers("/api/v1/hello-world/admin").hasRole(RoleType.ADMIN.name())
+                                .requestMatchers("/api/v1/admin/*").hasRole(RoleType.ADMIN.name())
                                 .requestMatchers("/api/v1/hello-world/user").hasRole(RoleType.USER.name())
 //                                .anyRequest().authenticated()
                                 .anyRequest().permitAll()
