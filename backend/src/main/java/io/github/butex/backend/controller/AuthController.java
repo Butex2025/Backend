@@ -5,6 +5,7 @@ import io.github.butex.backend.dto.auth.SignInRequestDTO;
 import io.github.butex.backend.dto.auth.SignInResponseDTO;
 import io.github.butex.backend.dto.auth.SignUpRequestDTO;
 import io.github.butex.backend.dto.UserDTO;
+import io.github.butex.backend.dto.auth.SignUpResponseDTO;
 import io.github.butex.backend.service.UserService;
 import io.github.butex.backend.auth.JwtUtil;
 import io.github.butex.backend.util.PasswordUtil;
@@ -54,6 +55,12 @@ public class AuthController {
         }
 
         UserDTO newUser = userService.createNewUser(signUpRequestDTO);
-        return ResponseEntity.ok(newUser);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(signUpRequestDTO.getEmail(), signUpRequestDTO.getPassword())
+        );
+
+        String jwtToken = jwtUtils.generateJwtToken(authentication);
+
+        return ResponseEntity.ok(new SignUpResponseDTO(newUser, jwtToken));
     }
 }
