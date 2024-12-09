@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cubit/cart_cubit.dart';
 import 'package:frontend/data/model/cart.dart';
+import 'package:frontend/pages/checkout_page.dart';
 import 'package:frontend/pages/lists_tile/cart_tile.dart';
 
 class Cart extends StatefulWidget {
@@ -50,6 +51,7 @@ class _CartState extends State<Cart> {
                   price: item.price,
                   imageUrl: item.photo,
                   initialQuantity: item.count,
+                  size: item.size,
                 );
               },
             ),
@@ -102,57 +104,47 @@ class _CartState extends State<Cart> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
-                width: screenWidth * 0.78,
-                height: screenHeight * 0.035,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Total',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                      ),
-                    ),
-                    Text(
-                      '${(widget.ammount + shipping).toString()} \$',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    )
-                  ],
+          Container(
+            margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
+            width: screenWidth * 0.78,
+            height: screenHeight * 0.035,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Total',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ),
                 ),
-              ),
-            ],
+                Text(
+                  '${widget.ammount + shipping} \$',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                )
+              ],
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 30, left: 30, right: 30),
-                width: 330,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () => moveToMapScreen(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightBlue,
-                  ),
-                  child: const Text(
-                    'Checkout',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.black),
-                  ),
-                ),
+          Container(
+            margin: const EdgeInsets.only(top: 30, left: 30, right: 30),
+            width: screenWidth * 0.78,
+            height: screenHeight * 0.055,
+            child: ElevatedButton(
+              onPressed: () => moveToMapScreen(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightBlue,
               ),
-            ],
+              child: const Text(
+                'Checkout',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.white),
+              ),
+            ),
           ),
           SizedBox(height: screenHeight * 0.05),
         ],

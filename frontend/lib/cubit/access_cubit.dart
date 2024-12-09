@@ -1,13 +1,62 @@
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
+import '../pages/logic/secure_storage_manager.dart';
 
 part 'access_state.dart';
 
 class AccessCubit extends Cubit<AccessState> {
   AccessCubit() : super(const AccessInit()) {
+    _initializeNotifications();
     testConnection();
+  }
+
+  final _secureStorageManager = SecureStorageManager.instance;
+  final FlutterLocalNotificationsPlugin _notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> _initializeNotifications() async {
+    const androidInitialization =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const iOSInitialization = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    const initializationSettings = InitializationSettings(
+      android: androidInitialization,
+      iOS: iOSInitialization,
+    );
+
+    await _notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: _onSelectNotification,
+    );
+  }
+
+  Future<void> _showNotification(String title, String body) async {
+    const androidDetails = AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+
+    const iOSDetails = DarwinNotificationDetails();
+
+    const notificationDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iOSDetails,
+    );
+
+    await _notificationsPlugin.show(0, title, body, notificationDetails);
+  }
+
+  void _onSelectNotification(NotificationResponse notificationResponse) {
+    print('Notification clicked with payload: ${notificationResponse.payload}');
   }
 
   Future<void> testConnection() async {
@@ -23,9 +72,10 @@ class AccessCubit extends Cubit<AccessState> {
     if (response.statusCode == 200) {
       emit(const LogIn());
     } else {
-      //tu dodac error
+      await _showNotification(
+            "Blad polaczenia", "Brak polaczenia z internetem");
+      return;
     }
-    emit(const LogIn());
   }
 
   Future<void> moveToRegister() async {
@@ -54,7 +104,18 @@ class AccessCubit extends Cubit<AccessState> {
     );
 
     if (response.statusCode == 200) {
-      emit(const UserIn());
+      final responseBody = jsonDecode(response.body);
+      final token = responseBody['token'];
+      if (token != null) {
+        await _secureStorageManager.write('auth_token', token);
+
+        await _showNotification(
+            "Registration Success", "You are now registered!");
+        emit(const UserIn());
+      } else {
+        print("Nie ma token");
+        print("Response body: $responseBody");
+      }
     } else {
       print('Error: ${response.statusCode}');
       print('Response body: ${response.body}');
@@ -76,9 +137,18 @@ class AccessCubit extends Cubit<AccessState> {
     );
 
     if (response.statusCode == 200) {
-      emit(const UserIn());
+      final responseBody = jsonDecode(response.body);
+      final token = responseBody['token'];
+      if (token != null) {
+        await _secureStorageManager.write('auth_token', token);
+        await _showNotification("Login Success", "Welcome back!");
+        emit(const UserIn());
+      } else {
+        print("Nie ma token");
+        print("Response body: $responseBody");
+      }
     } else {
-      print('porblem z logowaniem');
+      print('Problem z logowaniem');
     }
     emit(const UserIn());
   }

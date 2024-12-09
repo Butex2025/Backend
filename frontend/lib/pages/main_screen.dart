@@ -48,16 +48,6 @@ class _MainScreenState extends State<MainScreen> {
           actions: [
             IconButton(
               icon: const Icon(Icons.shopping_cart_outlined),
-              // onPressed: () => Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => CartLogic(
-              //       // cartCubit: context.read<CartCubit>(),
-              //       //bloc provider of CC
-              //       //dopisanie metoda od dopisania
-              //     ),
-              //   ),
-              // ),
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(

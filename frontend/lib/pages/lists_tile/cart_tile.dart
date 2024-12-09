@@ -10,6 +10,7 @@ class ProductTile extends StatefulWidget {
   final double price;
   final String imageUrl;
   final int initialQuantity;
+  final int size;
 
   const ProductTile({
     super.key,
@@ -18,6 +19,7 @@ class ProductTile extends StatefulWidget {
     required this.price,
     required this.imageUrl,
     required this.initialQuantity,
+    required this.size,
   });
 
   @override
@@ -63,12 +65,23 @@ class _ProductTileState extends State<ProductTile> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    '\$${widget.price.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        '\$${widget.price.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Text(
+                        '    Size: ${widget.size}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

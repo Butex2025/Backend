@@ -23,7 +23,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  List<int> availableSizes = [39, 40, 41];
+  List<int> availableSizes = [39, 40, 41, 42, 43, 44];
   List<Color> availableColors = [
     Colors.white,
     Colors.black,
@@ -95,7 +95,6 @@ class _DetailPageState extends State<DetailPage> {
                 ),
               ),
             ),
-            // Product Details
             Expanded(
               flex: 2,
               child: Column(
@@ -171,16 +170,8 @@ class _DetailPageState extends State<DetailPage> {
                     }).toList(),
                   ),
                   const SizedBox(height: 8),
-                  // const Text(
-                  //   'Color',
-                  //   style: TextStyle(
-                  //     fontWeight: FontWeight.bold,
-                  //     fontSize: 18,
-                  //   ),
-                  // ),
                   const SizedBox(height: 8),
                   const Spacer(),
-                  // Add to Cart Button
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: SizedBox(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/cubit/cart_cubit.dart';
 import 'package:frontend/cubit/shop_cubit.dart';
 import 'package:frontend/data/model/cart.dart';
 import 'dart:convert';
@@ -40,6 +39,8 @@ class ListTileCustom extends StatefulWidget {
 }
 
 class _ListTileState extends State<ListTileCustom> {
+  int pickedSize = 40;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -104,7 +105,6 @@ class _ListTileState extends State<ListTileCustom> {
                 ),
               ],
             ),
-            // add to cart
             Positioned(
               bottom: 0,
               right: 0,
@@ -142,21 +142,77 @@ class _ListTileState extends State<ListTileCustom> {
     );
   }
 
-  addToCart(
+  Future<void> addToCart(
     BuildContext context,
     int id,
     String name,
     double price,
     String image,
-  ) {
-    final cartCubit = BlocProvider.of<ShopCubit>(context);
-    cartCubit.addToCart(CartModel(
-      id: id,
-      count: 1,
-      name: name,
-      photo: image,
-      price: price,
-      size: 43,
-    ));
+  ) async {
+    final selectedSize = await showSizePicker(context);
+
+    if (selectedSize != null) {
+      final cartCubit = BlocProvider.of<ShopCubit>(context);
+      cartCubit.addToCart(CartModel(
+        id: id,
+        count: 1,
+        name: name,
+        photo: image,
+        price: price,
+        size: selectedSize,
+      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$name (Size $selectedSize) added to cart')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Size selection canceled')),
+      );
+    }
+  }
+
+  Future<int?> showSizePicker(BuildContext context) async {
+    int? selectedSize;
+    return showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: const Text('Select Size'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(
+                  5,
+                  (index) {
+                    final size = 39 + index;
+                    return RadioListTile<int>(
+                      title: Text('Size $size'),
+                      value: size,
+                      groupValue: selectedSize,
+                      onChanged: (int? value) {
+                        setState(() {
+                          selectedSize = value;
+                        });
+                      },
+                    );
+                  },
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context, selectedSize),
+                  child: const Text('Confirm'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 }

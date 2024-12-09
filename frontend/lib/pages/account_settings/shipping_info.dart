@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../logic/secure_storage_manager.dart';
 
 class ShippingInfo extends StatefulWidget {
   const ShippingInfo({super.key});
@@ -10,7 +10,7 @@ class ShippingInfo extends StatefulWidget {
 }
 
 class _ShippingInfoState extends State<ShippingInfo> {
-  final _storage = const FlutterSecureStorage();
+  final _storageManager = SecureStorageManager.instance;
 
   final _streetController = TextEditingController();
   final _buildingNumberController = TextEditingController();
@@ -26,10 +26,10 @@ class _ShippingInfoState extends State<ShippingInfo> {
   }
 
   Future<void> _loadShippingInfo() async {
-    _streetController.text = await _storage.read(key: 'street') ?? '';
-    _buildingNumberController.text = await _storage.read(key: 'building_number') ?? '';
-    _postalCodeController.text = await _storage.read(key: 'postal_code') ?? '';
-    _cityController.text = await _storage.read(key: 'city') ?? '';
+    _streetController.text = await _storageManager.read('street') ?? '';
+    _buildingNumberController.text = await _storageManager.read('building_number') ?? '';
+    _postalCodeController.text = await _storageManager.read('postal_code') ?? '';
+    _cityController.text = await _storageManager.read('city') ?? '';
     setState(() {});
   }
 
@@ -41,10 +41,10 @@ class _ShippingInfoState extends State<ShippingInfo> {
       return;
     }
 
-    await _storage.write(key: 'street', value: _streetController.text);
-    await _storage.write(key: 'building_number', value: _buildingNumberController.text);
-    await _storage.write(key: 'postal_code', value: _postalCodeController.text);
-    await _storage.write(key: 'city', value: _cityController.text);
+    await _storageManager.write('street', _streetController.text);
+    await _storageManager.write('building_number', _buildingNumberController.text);
+    await _storageManager.write('postal_code', _postalCodeController.text);
+    await _storageManager.write('city', _cityController.text);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Shipping information saved')),
@@ -88,10 +88,6 @@ class _ShippingInfoState extends State<ShippingInfo> {
       controller: _postalCodeController,
       enabled: _isEditing,
       keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-        _PostalCodeInputFormatter(),
-      ],
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: "Postal Code",
@@ -121,19 +117,12 @@ class _ShippingInfoState extends State<ShippingInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: const Text("Shipping Information"),
         centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildField("Street", _streetController),
             const SizedBox(height: 16),
@@ -143,50 +132,21 @@ class _ShippingInfoState extends State<ShippingInfo> {
             const SizedBox(height: 16),
             _buildField("City", _cityController),
             const SizedBox(height: 32),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_isEditing) {
-                    _saveShippingInfo();
-                  } else {
-                    setState(() {
-                      _isEditing = true;
-                    });
-                  }
-                },
-                child: Text(_isEditing ? "Save" : "Edit"),
-              ),
+            ElevatedButton(
+              onPressed: () {
+                if (_isEditing) {
+                  _saveShippingInfo();
+                } else {
+                  setState(() {
+                    _isEditing = true;
+                  });
+                }
+              },
+              child: Text(_isEditing ? "Save" : "Edit"),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _PostalCodeInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final text = newValue.text;
-
-    final digitsOnly = text.replaceAll(RegExp(r'\D'), '');
-
-    String formatted = '';
-    for (int i = 0; i < digitsOnly.length; i++) {
-      if (i == 2) formatted += '-';
-      formatted += digitsOnly[i];
-    }
-
-    if (formatted.length > 6) {
-      formatted = formatted.substring(0, 6);
-    }
-
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }
