@@ -18,7 +18,7 @@ class CartLogic extends StatelessWidget {
         if (state is CartInit) {
           return const LoadingScreen();
         } else if (state is CartList) {
-          return Cart(items: state.items);
+          return Cart(items: state.items, ammount: state.fullPirce);
         } else if (state is CartMap) {
           return MapPage(markers: state.markers);
         }

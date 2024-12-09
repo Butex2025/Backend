@@ -10,21 +10,27 @@ final class CartInit extends CartState {
 
 final class CartList extends CartState {
   final List<CartModel> items;
-  //dodac full price
+  final double fullPirce;
 
   const CartList(
     this.items,
+    this.fullPirce,
   );
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is CartList && other.items == items;
+    return other is CartList &&
+        other.items == items &&
+        other.fullPirce == fullPirce;
   }
 
   @override
-  int get hashCode => items.hashCode;
+  int get hashCode => Object.hash(
+        items,
+        fullPirce,
+      );
 }
 
 final class CartMap extends CartState {

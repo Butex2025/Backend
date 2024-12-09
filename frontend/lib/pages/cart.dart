@@ -6,9 +6,12 @@ import 'package:frontend/pages/lists_tile/cart_tile.dart';
 
 class Cart extends StatefulWidget {
   final List<CartModel> items;
+  final double ammount;
+
   const Cart({
     super.key,
     required this.items,
+    required this.ammount,
   });
 
   @override
@@ -16,23 +19,7 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  double ammount = 0;
   double shipping = 50;
-  void countPrice() async {
-    double countPrice = 0;
-    for (var i = 0; i < widget.items.length; i++) {
-      countPrice = countPrice + widget.items[i].price;
-    }
-    setState(() {
-      ammount = countPrice;
-    });
-  }
-
-  @override
-  void initState() {
-    countPrice();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +45,7 @@ class _CartState extends State<Cart> {
               itemBuilder: (context, index) {
                 final item = widget.items[index];
                 return ProductTile(
+                  id: item.id,
                   name: item.name,
                   price: item.price,
                   imageUrl: item.photo,
@@ -66,10 +54,12 @@ class _CartState extends State<Cart> {
               },
             ),
           ),
-          SizedBox(
-            width: screenWidth * 0.9,
+          Container(
+            margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
+            width: screenWidth * 0.78,
+            height: screenHeight * 0.035,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
                   'Subtotal',
@@ -79,7 +69,7 @@ class _CartState extends State<Cart> {
                   ),
                 ),
                 Text(
-                  '$ammount \$',
+                  '${(widget.ammount).toString()} \$',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -88,10 +78,12 @@ class _CartState extends State<Cart> {
               ],
             ),
           ),
-          SizedBox(
-            width: screenWidth * 0.8,
+          Container(
+            margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
+            width: screenWidth * 0.78,
+            height: screenHeight * 0.035,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
                   'Shipping',
@@ -110,45 +102,57 @@ class _CartState extends State<Cart> {
               ],
             ),
           ),
-          SizedBox(
-            width: screenWidth * 0.85,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Text(
-                  'Total',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
+                width: screenWidth * 0.78,
+                height: screenHeight * 0.035,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Total',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
+                    ),
+                    Text(
+                      '${(widget.ammount + shipping).toString()} \$',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 30, left: 30, right: 30),
+                width: 330,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () => moveToMapScreen(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.lightBlue,
+                  ),
+                  child: const Text(
+                    'Checkout',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.black),
                   ),
                 ),
-                Text(
-                  '${ammount + shipping} \$',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 30, left: 30, right: 30),
-            width: 330,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () => moveToMapScreen(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.lightBlue,
               ),
-              child: const Text(
-                'Checkout',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.black),
-              ),
-            ),
+            ],
           ),
           SizedBox(height: screenHeight * 0.05),
         ],

@@ -29,7 +29,6 @@ class UserPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //moze jakis padding
                 IconButton(
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const MainLoad()));
@@ -135,7 +134,6 @@ class UserPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //moze jakis padding
                 IconButton(
                   onPressed: () {},
                   icon: const Icon(Icons.notifications),

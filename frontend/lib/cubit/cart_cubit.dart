@@ -16,12 +16,12 @@ class CartCubit extends Cubit<CartState> {
   Future<void> loadCart() async {
     emit(const CartInit());
     final SharedPreferences db = await SharedPreferences.getInstance();
+    double fullPrice = 0;
 
     final List<String> savedItems = db.getStringList('items') ?? [];
 
     if (savedItems.isEmpty) {
-          emit(const CartList([]));
-
+      emit(const CartList([], 0));
     }
 
     final List<CartModel> items = savedItems
@@ -29,7 +29,13 @@ class CartCubit extends Cubit<CartState> {
           (item) => CartModel.fromJson(jsonDecode(item)),
         )
         .toList();
-    emit(CartList(items));
+
+    for (var i = 0; i < items.length; i++) {
+      fullPrice = fullPrice + items[i].price * items[i].count;
+    }
+    fullPrice = fullPrice.roundToDouble();
+
+    emit(CartList(items, fullPrice));
   }
 
   Future<void> addToCart(CartModel item) async {
@@ -59,7 +65,7 @@ class CartCubit extends Cubit<CartState> {
     final SharedPreferences db = await SharedPreferences.getInstance();
 
     final List<String> savedItems = db.getStringList('items') ?? [];
-
+    double fullPrice = 0;
     if (savedItems.isEmpty) {
       //error
       return;
@@ -84,7 +90,13 @@ class CartCubit extends Cubit<CartState> {
         .toList();
 
     db.setStringList('items', readyToSave);
-    emit(CartList(items));
+
+    for (var i = 0; i < items.length; i++) {
+      fullPrice = fullPrice + items[i].price * items[i].count;
+    }
+    fullPrice = fullPrice.roundToDouble();
+
+    emit(CartList(items, fullPrice));
     return;
   }
 
@@ -93,17 +105,12 @@ class CartCubit extends Cubit<CartState> {
     db.clear();
   }
 
-  // Future<void> sendCart() {
-
-  // }
-
-  Future<void> editItem(CartModel item) async {
+  Future<void> editItem(int id, bool addItem) async {
     final SharedPreferences db = await SharedPreferences.getInstance();
 
     final List<String> savedItems = db.getStringList('items') ?? [];
 
     if (savedItems.isEmpty) {
-      //error
       return;
     }
 
@@ -114,14 +121,33 @@ class CartCubit extends Cubit<CartState> {
         .toList();
 
     for (var i = 0; i < items.length; i++) {
-      if (items[i].id == item.id) {
-        items[i] = CartModel(
-            id: item.id,
-            count: item.count,
-            name: item.name,
-            photo: item.photo,
-            price: item.price,
-            size: item.size);
+      if (items[i].id == id) {
+        int newCount = items[i].count;
+        if (addItem) {
+          newCount = newCount + 1;
+
+          items[i] = CartModel(
+              id: items[i].id,
+              count: newCount,
+              name: items[i].name,
+              photo: items[i].photo,
+              price: items[i].price,
+              size: items[i].size);
+        } else {
+          if (newCount == 1) {
+            items.removeAt(i);
+          } else {
+            newCount = newCount - 1;
+            items[i] = CartModel(
+                id: items[i].id,
+                count: newCount,
+                name: items[i].name,
+                photo: items[i].photo,
+                price: items[i].price,
+                size: items[i].size);
+          }
+        }
+
         break;
       }
     }
@@ -133,6 +159,12 @@ class CartCubit extends Cubit<CartState> {
         .toList();
 
     db.setStringList('items', readyToSave);
+    double fullPrice = 0;
+    for (var i = 0; i < items.length; i++) {
+      fullPrice = fullPrice + items[i].price * items[i].count;
+    }
+    fullPrice = fullPrice.roundToDouble();
+    emit(CartList(items, fullPrice));
     return;
   }
 

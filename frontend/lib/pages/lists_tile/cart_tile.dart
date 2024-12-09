@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cubit/cart_cubit.dart';
 
 class ProductTile extends StatefulWidget {
+  final int id;
   final String name;
   final double price;
   final String imageUrl;
@@ -12,6 +13,7 @@ class ProductTile extends StatefulWidget {
 
   const ProductTile({
     super.key,
+    required this.id,
     required this.name,
     required this.price,
     required this.imageUrl,
@@ -28,19 +30,6 @@ class _ProductTileState extends State<ProductTile> {
   @override
   void initState() {
     super.initState();
-    quantity = widget.initialQuantity;
-  }
-
-  void _incrementQuantity() {
-    setState(() {
-      quantity++;
-    });
-  }
-
-  void _decrementQuantity() {
-    setState(() {
-      if (quantity > 1) quantity--;
-    });
   }
 
   @override
@@ -87,16 +76,16 @@ class _ProductTileState extends State<ProductTile> {
             Row(
               children: [
                 IconButton(
-                  onPressed: _decrementQuantity,
+                  onPressed: () => decrementQuantity(context, widget.id),
                   icon: const Icon(Icons.remove_circle_outline),
                   color: Colors.grey,
                 ),
                 Text(
-                  '$quantity',
+                  '${widget.initialQuantity}',
                   style: const TextStyle(fontSize: 16),
                 ),
                 IconButton(
-                  onPressed: _incrementQuantity,
+                  onPressed: () => incrementQuantity(context, widget.id),
                   icon: const Icon(Icons.add_circle_outline),
                   color: Colors.blue,
                 ),
@@ -115,7 +104,17 @@ class _ProductTileState extends State<ProductTile> {
   }
 }
 
-void removeItem(BuildContext context,String name) {
+void incrementQuantity(BuildContext context, int id) {
+  final cartCubit = BlocProvider.of<CartCubit>(context);
+  cartCubit.editItem(id, true);
+}
+
+void decrementQuantity(BuildContext context, int id) {
+  final cartCubit = BlocProvider.of<CartCubit>(context);
+  cartCubit.editItem(id, false);
+}
+
+void removeItem(BuildContext context, String name) {
   final cartCubit = BlocProvider.of<CartCubit>(context);
   cartCubit.removeFromCart(name);
 }
