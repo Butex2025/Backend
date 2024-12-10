@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../logic/secure_storage_manager.dart';
 
 class ShippingInfo extends StatefulWidget {

@@ -86,6 +86,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -169,7 +171,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: () => payNow(),
+                onPressed: () => payNow(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lightBlue,
                 ),
@@ -198,5 +200,5 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 }
 
-payNow() {
+payNow(BuildContext context) {
 }

@@ -103,6 +103,8 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -129,31 +131,31 @@ class _MapPageState extends State<MapPage> {
               _buildEditableField(Icons.email, email, 'Email', (value) {
                 email = value;
               }),
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.02),
               const Text(
                 'Address',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: screenHeight * 0.01),
               _buildEditableField(Icons.home, address, 'Address', (value) {
                 address = value;
               }),
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.02),
               const Text(
                 'Payment Method',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: screenHeight * 0.01),
               _buildEditableField(
                   Icons.payment, paymentMethod, 'Payment Method', (value) {
                 paymentMethod = value;
               }),
-              const SizedBox(height: 16),
+              SizedBox(height: screenHeight * 0.02),
               const Text(
                 'Shipping or Pickup',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: screenHeight * 0.01),
               Container(
                 width: MediaQuery.of(context).size.width - 32,
                 padding: const EdgeInsets.only(left: 16),
@@ -178,11 +180,11 @@ class _MapPageState extends State<MapPage> {
                   }).toList(),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: screenHeight * 0.025),
               if (shippingOption == 'Pickup')
                 SizedBox(
-                  width: 400,
-                  height: 500,
+                  width: screenWidth * 0.9,
+                  height: screenHeight * 0.45,
                   child: GoogleMap(
                     onMapCreated: _onMapCreated,
                     initialCameraPosition: CameraPosition(
@@ -192,10 +194,10 @@ class _MapPageState extends State<MapPage> {
                     markers: widget.markers,
                   ),
                 ),
-              SizedBox(height: 30),
+              SizedBox(height: screenHeight * 0.05),
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: screenHeight * 0.05,
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(

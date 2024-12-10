@@ -26,6 +26,8 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         leading: Container(
@@ -36,7 +38,7 @@ class _SignInState extends State<SignIn> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 80),
+              SizedBox(height: screenHeight * 0.09),
               const Text(
                 'Hello Again!',
                 style: TextStyle(
@@ -50,12 +52,12 @@ class _SignInState extends State<SignIn> {
                   fontSize: 20,
                 ),
               ),
-              const SizedBox(height: 60),
-              const Row(
+              SizedBox(height: screenHeight * 0.07),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 30),
-                  Text(
+                  SizedBox(width: screenWidth * 0.07),
+                  const Text(
                     'Email Address',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -94,12 +96,12 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-              const Row(
+              SizedBox(height: screenHeight * 0.05),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 30),
-                  Text(
+                  SizedBox(width: screenWidth * 0.08),
+                  const Text(
                     'Password',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -155,13 +157,13 @@ class _SignInState extends State<SignIn> {
                     child: const Text('Recovery Password'),
                     onTap: () {},
                   ),
-                  const SizedBox(width: 30),
+                  SizedBox(width: screenWidth * 0.08),
                 ],
               ),
               Container(
                 margin: const EdgeInsets.only(top: 30, left: 30, right: 30),
-                width: 350,
-                height: 50,
+                width: screenWidth * 0.75,
+                height: screenHeight * 0.06,
                 child: ElevatedButton(
                   onPressed: () => logIn(context, email, password),
                   style: ElevatedButton.styleFrom(
@@ -173,7 +175,7 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-              const SizedBox(height: 150),
+              SizedBox(height: screenHeight * 0.15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

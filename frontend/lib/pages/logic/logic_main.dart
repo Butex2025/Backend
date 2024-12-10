@@ -25,6 +25,5 @@ class LogicMain extends StatelessWidget {
         return const LoadingScreen();
       },
     );
-    ;
   }
 }

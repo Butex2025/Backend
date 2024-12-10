@@ -75,7 +75,7 @@ class _ProductTileState extends State<ProductTile> {
                         ),
                       ),
                       Text(
-                        '    Size: ${widget.size}',
+                        ' Size: ${widget.size}',
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.grey,

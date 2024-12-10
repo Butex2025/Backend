@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cubit/cart_cubit.dart';
 import 'package:frontend/data/model/cart.dart';
-import 'package:frontend/pages/checkout_page.dart';
 import 'package:frontend/pages/lists_tile/cart_tile.dart';
 
 class Cart extends StatefulWidget {

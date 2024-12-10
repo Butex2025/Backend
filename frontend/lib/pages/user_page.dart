@@ -33,6 +33,8 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: AppBar(
           leading: Container(
@@ -50,16 +52,14 @@ class _UserPageState extends State<UserPage> {
                 color: Colors.lightBlue,
               ),
             ),
-            const SizedBox(
-              height: 40,
-            ),
+            SizedBox(height: screenHeight * 0.04),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
-                  width: 250,
-                  height: 40,
+                  width: screenWidth * 0.55,
+                  height: screenHeight * 0.06,
                   child: OutlinedButton(
                       onPressed: () {
                         Navigator.push(
@@ -98,16 +98,13 @@ class _UserPageState extends State<UserPage> {
                 )
               ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
-                  width: 250,
-                  height: 40,
+                  width: screenWidth * 0.55,
+                  height: screenHeight * 0.06,
                   child: OutlinedButton(
                       onPressed: () => Navigator.push(
                             context,
@@ -147,16 +144,13 @@ class _UserPageState extends State<UserPage> {
                 )
               ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
-                  width: 250,
-                  height: 40,
+                  width: screenWidth * 0.55,
+                  height: screenHeight * 0.06,
                   child: OutlinedButton(
                       onPressed: () {},
                       style: OutlinedButton.styleFrom(
@@ -188,16 +182,13 @@ class _UserPageState extends State<UserPage> {
                 )
               ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
-                  width: 250,
-                  height: 40,
+                  width: screenWidth * 0.55,
+                  height: screenHeight * 0.06,
                   child: OutlinedButton(
                       onPressed: () {
                         Navigator.push(
@@ -236,20 +227,16 @@ class _UserPageState extends State<UserPage> {
                 )
               ],
             ),
-            const SizedBox(
-              height: 200,
-            ),
+            SizedBox(height: screenHeight * 0.1),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Container(
-                height: 1.0,
-                width: 300.0,
+                height: screenHeight * 0.001,
+                width: screenWidth,
                 color: Colors.black,
               ),
             ),
-            const SizedBox(
-              height: 60,
-            ),
+            SizedBox(height: screenHeight * 0.05),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

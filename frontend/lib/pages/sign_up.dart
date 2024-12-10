@@ -29,6 +29,8 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -40,7 +42,7 @@ class _SignUpState extends State<SignUp> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 80),
+              SizedBox(height: screenHeight * 0.08),
               const Text(
                 'Create Account',
                 style: TextStyle(
@@ -54,12 +56,12 @@ class _SignUpState extends State<SignUp> {
                   fontSize: 20,
                 ),
               ),
-              const SizedBox(height: 30),
-              const Row(
+              SizedBox(height: screenHeight * 0.05),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 30),
-                  Text(
+                  SizedBox(width: screenWidth * 0.075),
+                  const Text(
                     'Your Name',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -97,7 +99,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: screenHeight * 0.04),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -141,7 +143,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: screenHeight * 0.04),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -199,8 +201,8 @@ class _SignUpState extends State<SignUp> {
               ),
               Container(
                 margin: const EdgeInsets.only(top: 30, left: 30, right: 30),
-                width: 350,
-                height: 50,
+                width: screenWidth * 0.8,
+                height: screenHeight * 0.05,
                 child: ElevatedButton(
                   onPressed: () =>
                       registerAccount(context, name, email, password),
@@ -213,7 +215,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              const SizedBox(height: 130),
+              SizedBox(height: screenHeight * 0.1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
