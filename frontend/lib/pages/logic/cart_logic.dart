@@ -4,9 +4,9 @@ import 'package:frontend/cubit/cart_cubit.dart';
 import 'package:frontend/pages/cart.dart';
 import 'package:frontend/pages/loading.dart';
 import 'package:frontend/pages/map_page.dart';
+import 'package:frontend/pay_page.dart';
 
 class CartLogic extends StatelessWidget {
-
   const CartLogic({
     super.key,
   });
@@ -21,6 +21,8 @@ class CartLogic extends StatelessWidget {
           return Cart(items: state.items, ammount: state.fullPirce);
         } else if (state is CartMap) {
           return MapPage(markers: state.markers);
+        } else if (state is WebPay) {
+          return PayPage(url: state.link);
         }
         return const LoadingScreen();
       },

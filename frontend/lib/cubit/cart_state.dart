@@ -50,3 +50,21 @@ final class CartMap extends CartState {
   @override
   int get hashCode => markers.hashCode;
 }
+
+final class WebPay extends CartState {
+  final String link;
+
+  const WebPay(
+    this.link,
+  );
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is WebPay && other.link == link;
+  }
+
+  @override
+  int get hashCode => link.hashCode;
+}

@@ -199,7 +199,7 @@ class _MapPageState extends State<MapPage> {
                 width: double.infinity,
                 height: screenHeight * 0.05,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => placeOrder(context,email,name,shippingOption),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightBlue,
                   ),
@@ -230,6 +230,16 @@ class _MapPageState extends State<MapPage> {
         onPressed: () => _editField(label, value, onChanged),
       ),
     );
+  }
+}
+
+placeOrder(BuildContext context, String email, String name,String pickup) {
+  final cartCubit = BlocProvider.of<CartCubit>(context);
+  if(pickup=='Shipping'){
+      cartCubit.placeOrder(name, email,false);
+  }else{
+      cartCubit.placeOrder(name, email,true);
+
   }
 }
 

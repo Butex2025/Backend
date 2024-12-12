@@ -65,7 +65,7 @@ class _ProductTileState extends State<ProductTile> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Row(
+                  Column(
                     children: [
                       Text(
                         '\$${widget.price.toStringAsFixed(2)}',
