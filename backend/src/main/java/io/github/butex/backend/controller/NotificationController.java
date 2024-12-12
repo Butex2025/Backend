@@ -36,9 +36,12 @@ public class NotificationController {
     )
     @GetMapping
     public ResponseEntity<List<NotificationOrderDTO>> getOrdersStatus(@Parameter(hidden = true) Authentication authentication) {
-        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
-        if(email.isEmpty()){
+        if(authentication == null || authentication.getPrincipal() == null) {
             throw new DataBadRequestException("User has to be authenticated");
+        }
+        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+        if (email == null || email.trim().isEmpty()) {
+            throw new DataBadRequestException("User must be authenticated.");
         }
         List<Order> orders = orderService.getUserNotConfirmedOrders(email);
 
