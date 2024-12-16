@@ -14,7 +14,7 @@ class _PaymentInfoState extends State<PaymentInfo> {
   final _nameController = TextEditingController();
   final _cardNumberController = TextEditingController();
   final _expiryDateController = TextEditingController();
-  final _emailAddressController = TextEditingController(); // Corrected name here
+  final _emailAddressController = TextEditingController();
 
   bool _isEditing = false;
 
@@ -28,14 +28,14 @@ class _PaymentInfoState extends State<PaymentInfo> {
     _nameController.text = await _storageManager.read('name') ?? '';
     _cardNumberController.text = await _storageManager.read('card_number') ?? '';
     _expiryDateController.text = await _storageManager.read('expiry_date') ?? '';
-    _emailAddressController.text = await _storageManager.read('email') ?? ''; // Corrected controller here
+    _emailAddressController.text = await _storageManager.read('email') ?? ''; 
 
     setState(() {});
   }
 
   Future<void> _savePaymentInfo() async {
     await _storageManager.write('name', _nameController.text);
-    await _storageManager.write('email', _emailAddressController.text); // Corrected controller here
+    await _storageManager.write('email', _emailAddressController.text);
     await _storageManager.write('card_number', _cardNumberController.text);
     await _storageManager.write('expiry_date', _expiryDateController.text);
 
@@ -96,7 +96,7 @@ class _PaymentInfoState extends State<PaymentInfo> {
           children: [
             _buildField("Name and Surname", _nameController),
             const SizedBox(height: 16),
-            _buildField("Email", _emailAddressController), // Corrected field here
+            _buildField("Email", _emailAddressController),
             const SizedBox(height: 16),
             _buildField("Card Number", _cardNumberController),
             const SizedBox(height: 16),

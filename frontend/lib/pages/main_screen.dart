@@ -85,20 +85,6 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ],
               ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search shoes',
-                  prefixIcon: const Icon(Icons.search),
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.symmetric(
-                      vertical: 0.0, horizontal: paddingHorizontal),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(screenWidth * 0.05),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
             ),
           ),
           Expanded(

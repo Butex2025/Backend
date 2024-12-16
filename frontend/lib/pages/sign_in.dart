@@ -150,16 +150,6 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    child: const Text('Recovery Password'),
-                    onTap: () {},
-                  ),
-                  SizedBox(width: screenWidth * 0.08),
-                ],
-              ),
               Container(
                 margin: const EdgeInsets.only(top: 30, left: 30, right: 30),
                 width: screenWidth * 0.75,

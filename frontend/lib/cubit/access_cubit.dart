@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -73,7 +74,7 @@ class AccessCubit extends Cubit<AccessState> {
       emit(const LogIn());
     } else {
       await _showNotification(
-            "Blad polaczenia", "Brak polaczenia z internetem");
+          "Blad polaczenia", "Brak polaczenia z internetem");
       return;
     }
   }
@@ -141,7 +142,32 @@ class AccessCubit extends Cubit<AccessState> {
       final token = responseBody['token'];
       if (token != null) {
         await _secureStorageManager.write('auth_token', token);
-        await _showNotification("Login Success", "Welcome back!");
+
+        final url = Uri.parse('https://butex.onrender.com/api/v1/notification');
+
+        final headers = {
+          'accept': '*/*',
+          'Authorization': 'Bearer $token',
+        };
+
+        final responseNot = await http.get(url, headers: headers);
+        List<int> ids = [];
+        List<String> status = [];
+        final List data = json.decode(responseNot.body);
+        for (var i = 0; i < data.length; i++) {
+          ids.add(data[i]["id"]);
+          status.add(data[i]["status"]);
+        }
+
+        for (var i = 0; i < ids.length; i++) {
+          if (status[i] != "CANCELED" || status[i] != "RETURNED") {
+            Timer(const Duration(seconds: 1), () async {
+              await _showNotification(
+                  "Order no:${ids[i]}", "Status: ${status[i]}");
+            });
+          }
+        }
+
         emit(const UserIn());
       } else {
         print("Nie ma token");
@@ -150,6 +176,5 @@ class AccessCubit extends Cubit<AccessState> {
     } else {
       print('Problem z logowaniem');
     }
-    emit(const UserIn());
   }
 }

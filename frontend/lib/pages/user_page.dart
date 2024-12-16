@@ -152,44 +152,6 @@ class _UserPageState extends State<UserPage> {
                   width: screenWidth * 0.55,
                   height: screenHeight * 0.06,
                   child: OutlinedButton(
-                      onPressed: () {},
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(
-                          color: Colors.transparent,
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.fire_truck,
-                            color: Colors.black,
-                            size: 40,
-                          ),
-                          SizedBox(
-                            width: 30,
-                          ),
-                          Text(
-                            'Orders',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.black,
-                            ),
-                          )
-                        ],
-                      )),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
-                  width: screenWidth * 0.55,
-                  height: screenHeight * 0.06,
-                  child: OutlinedButton(
                       onPressed: () {
                         Navigator.push(
                           context,

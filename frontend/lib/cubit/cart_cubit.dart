@@ -229,7 +229,7 @@ class CartCubit extends Cubit<CartState> {
           (item) => CartModel.fromJson(jsonDecode(item)),
         )
         .toList();
-    String phone = "123456789";
+    String phone = "607338909";
     for (var i = 0; i < items.length; i++) {
       fullPrice = fullPrice + items[i].price * items[i].count;
     }
@@ -286,25 +286,45 @@ class CartCubit extends Cubit<CartState> {
 
     const String url = 'https://butex.onrender.com/api/v1/order';
     try {
+      var test;
+      if (isPickup) {
+        test = jsonEncode({
+          "products": order.products,
+          "shopId": order.shopId,
+          "orderAddress": {
+            "street": null,
+            "postcode": null,
+            "city": null,
+          },
+          "name": name.toString(),
+          "email": email.toString(),
+          "phoneNumber": phone.toString(),
+          "service": service.toString(),
+        });
+      } else {
+        test = jsonEncode({
+          "products": order.products,
+          "shopId": order.shopId,
+          "orderAddress": {
+            "street": order.orderAddress!.street.toString(),
+            "postcode": order.orderAddress!.postcode.toString(),
+            "city": order.orderAddress!.city.toString(),
+          },
+          "name": name.toString(),
+          "email": email.toString(),
+          "phoneNumber": phone.toString(),
+          "service": service.toString(),
+        });
+      }
+
+      print(test);
       final response = await http.post(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
           'accept': '*/*',
         },
-        body: jsonEncode({
-          "products": order.products,
-          "shopId": null,
-          "orderAddress": {
-            "street": "Przykładowa 6",
-            "postcode": "95-100",
-            "city": "Zgierz",
-          },
-          "name": "Tomek wlodek",
-          "email": "test@test.pl",
-          "phoneNumber": "603338899",
-          "service": "INPOST",
-        }),
+        body: test,
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

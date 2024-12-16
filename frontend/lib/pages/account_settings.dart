@@ -13,7 +13,7 @@ class AccountSettings extends StatefulWidget {
 class _AccountSettingsState extends State<AccountSettings> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  bool _pushNotifications = false;
+  bool _pushNotifications = true;
   bool _locationServices = false;
 
   @override
@@ -170,7 +170,6 @@ class _AccountSettingsState extends State<AccountSettings> {
               child: const Text('Yes'),
               onPressed: () {
                 Navigator.of(context).pop();
-                // tu trzeba usunac konto
               },
             ),
           ],
