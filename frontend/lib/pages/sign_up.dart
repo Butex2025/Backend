@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cubit/access_cubit.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -27,12 +29,12 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        leading:IconButton(
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/signin');
-          },
+        leading: IconButton(
+          onPressed: () => moveToLogIn(context),
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
       ),
@@ -40,7 +42,8 @@ class _SignUpState extends State<SignUp> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 80),
+
+              SizedBox(height: screenHeight * 0.08),
               const Text(
                 'Create Account',
                 style: TextStyle(
@@ -49,17 +52,19 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               const Text(
-              'Lets Create Account Together',
+
+                'Lets Create Account Together',
                 style: TextStyle(
                   fontSize: 20,
                 ),
               ),
-              const SizedBox(height: 30),
-              const Row(
+              SizedBox(height: screenHeight * 0.05),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 30),
-                  Text(
+                  SizedBox(width: screenWidth * 0.075),
+                  const Text(
+
                     'Your Name',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -97,7 +102,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: screenHeight * 0.04),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -141,7 +146,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: screenHeight * 0.04),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -178,9 +183,9 @@ class _SignUpState extends State<SignUp> {
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
-                            passVisibility
-                                ? passVisibility = false
-                                : passVisibility = true;
+                          passVisibility
+                              ? passVisibility = false
+                              : passVisibility = true;
                         });
                       },
                       icon: passVisibility
@@ -199,12 +204,11 @@ class _SignUpState extends State<SignUp> {
               ),
               Container(
                 margin: const EdgeInsets.only(top: 30, left: 30, right: 30),
-                width: 350,
-                height: 50,
+                width: screenWidth * 0.8,
+                height: screenHeight * 0.05,
                 child: ElevatedButton(
-                  onPressed: () {
-                    print('Name: $name, Email: $email, Pass: $password');
-                  },
+                  onPressed: () =>
+                      registerAccount(context, name, email, password),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                   ),
@@ -214,7 +218,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              const SizedBox(height: 130),
+              SizedBox(height: screenHeight * 0.1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -232,9 +236,8 @@ class _SignUpState extends State<SignUp> {
                         fontSize: 10,
                       ),
                     ),
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, '/signin');
-                    },
+                    onTap: () => moveToLogIn(context),
+
                   ),
                 ],
               ),
@@ -244,4 +247,15 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+}
+
+registerAccount(
+    BuildContext context, String name, String email, String password) {
+  final pokeCubit = BlocProvider.of<AccessCubit>(context);
+  pokeCubit.register(name, email, password);
+}
+
+moveToLogIn(BuildContext context) {
+  final pokeCubit = BlocProvider.of<AccessCubit>(context);
+  pokeCubit.moveToLog();
 }
