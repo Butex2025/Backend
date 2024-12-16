@@ -1,18 +1,14 @@
 package io.github.butex.backend.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 public class MessageError {
-    private int statusCode;
-    private Date timestamp;
-    private String message;
-    private String description;
+    private final int statusCode;
+    private final Date timestamp;
+    private final String message;
+    private final String description;
 
 }

@@ -1,20 +1,20 @@
 package io.github.butex.backend.service;
 
-import io.github.butex.backend.dao.entity.RoleEntity;
-import io.github.butex.backend.dao.entity.RoleType;
-import io.github.butex.backend.dao.repository.RoleRepository;
+import io.github.butex.backend.dal.entity.Role;
+import io.github.butex.backend.constant.RoleType;
+import io.github.butex.backend.dal.repository.RoleRepository;
 import io.github.butex.backend.exception.DataNotFoundException;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
 @Service
+@RequiredArgsConstructor
 public class RoleService {
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     @PostConstruct
     public void checkIfRoles() {
@@ -27,15 +27,14 @@ public class RoleService {
         });
     }
 
-    public RoleEntity findRoleByRoleType(final RoleType roleType) {
+    public Role findRoleByRoleType(final RoleType roleType) {
         return roleRepository.findByRoleName(roleType)
                 .orElseThrow(() -> new DataNotFoundException("Role Not Found with role name: " + roleType.name()));
     }
 
-    public RoleEntity createNewRole(RoleType role) {
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRoleName(role);
-        return roleRepository.save(roleEntity);
+    public void createNewRole(RoleType roleType) {
+        Role role = new Role();
+        role.setRoleName(roleType);
+        roleRepository.save(role);
     }
-
 }

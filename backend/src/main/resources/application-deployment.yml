@@ -2,12 +2,25 @@ spring:
   application:
     name: ButexBackend
   datasource:
-    url: jdbc:postgresql://dpg-cs8lh8bv2p9s73e3ndtg-a:5432/butex
-    username: butex
+    url: jdbc:postgresql://dpg-cssu7q23esus739qg6i0-a:5432/butex_m2mu
+    username: butex_m2mu_user
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
+furgonetka:
+  environment-url: https://api.sandbox.furgonetka.pl
+  api-token: ${FURGONETKA_API_TOKEN}
+  endpoint:
+    package-validate: /packages/validate
+    package-create: /packages
+paynow:
+  environment-url: https://api.sandbox.paynow.pl
+  api-token: ${PAYNOW_API_TOKEN}
+  signature-token: ${PAYNOW_SIGNATURE_TOKEN}
+  endpoint:
+    payment-create: /v1/payments
+    payment-status: /v1/payments/{paymentId}/status
 
 ButexValues:
   app:

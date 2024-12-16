@@ -42,6 +42,7 @@ class _SignUpState extends State<SignUp> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+
               SizedBox(height: screenHeight * 0.08),
               const Text(
                 'Create Account',
@@ -51,6 +52,7 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               const Text(
+
                 'Lets Create Account Together',
                 style: TextStyle(
                   fontSize: 20,
@@ -62,6 +64,7 @@ class _SignUpState extends State<SignUp> {
                 children: [
                   SizedBox(width: screenWidth * 0.075),
                   const Text(
+
                     'Your Name',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -234,6 +237,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                     onTap: () => moveToLogIn(context),
+
                   ),
                 ],
               ),
