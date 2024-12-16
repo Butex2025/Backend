@@ -1,6 +1,7 @@
 package io.github.butex.backend.controller;
 
 import io.github.butex.backend.dal.entity.Order;
+import io.github.butex.backend.dto.CreateOrderDto;
 import io.github.butex.backend.dto.OrderDTO;
 import io.github.butex.backend.mapper.OrderMapper;
 import io.github.butex.backend.service.OrderService;
@@ -20,7 +21,7 @@ public class OrderController {
     private final OrderMapper orderMapper;
 
     @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody CreateOrderDto orderDTO) {
         Order order = orderService.validateOrderAndSaveEntity(orderDTO);
         return ResponseEntity.ok(orderMapper.orderToOrderDTO(order));
     }

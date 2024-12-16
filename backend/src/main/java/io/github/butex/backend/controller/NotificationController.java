@@ -2,6 +2,7 @@ package io.github.butex.backend.controller;
 
 import io.github.butex.backend.dal.entity.Order;
 import io.github.butex.backend.dal.entity.User;
+import io.github.butex.backend.dto.NotificationOrderDTO;
 import io.github.butex.backend.exception.DataBadRequestException;
 import io.github.butex.backend.mapper.OrderMapper;
 import io.github.butex.backend.service.OrderService;
@@ -34,10 +35,13 @@ public class NotificationController {
                     "Its important to send request with authentication header, based on jwt.sum === user email, we get info about orders"
     )
     @GetMapping
-    public ResponseEntity<?> getOrdersStatus(@Parameter(hidden = true) Authentication authentication) {
-        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
-        if(email.isEmpty()){
+    public ResponseEntity<List<NotificationOrderDTO>> getOrdersStatus(@Parameter(hidden = true) Authentication authentication) {
+        if(authentication == null || authentication.getPrincipal() == null) {
             throw new DataBadRequestException("User has to be authenticated");
+        }
+        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+        if (email == null || email.trim().isEmpty()) {
+            throw new DataBadRequestException("User must be authenticated.");
         }
         List<Order> orders = orderService.getUserNotConfirmedOrders(email);
 

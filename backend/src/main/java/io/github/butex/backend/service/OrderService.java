@@ -5,9 +5,12 @@ import io.github.butex.backend.constant.DeliveryService;
 import io.github.butex.backend.dal.entity.Order;
 import io.github.butex.backend.dal.entity.OrderStatus;
 import io.github.butex.backend.dal.entity.Payment;
+import io.github.butex.backend.dal.entity.Shop;
 import io.github.butex.backend.dal.repository.OrderRepository;
+import io.github.butex.backend.dto.CreateOrderDto;
 import io.github.butex.backend.dto.OrderDTO;
 import io.github.butex.backend.dto.OrderProductDTO;
+import io.github.butex.backend.dto.ShopDTO;
 import io.github.butex.backend.dto.furgonetka.FurgonetkaPackageDTO;
 import io.github.butex.backend.dto.furgonetka.FurgonetkaPackagePickupDTO;
 import io.github.butex.backend.dto.furgonetka.FurgonetkaPackageReceiverDTO;
@@ -33,17 +36,34 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final ProductService productService;
     private final PaymentServiceHelper paymentServiceHelper;
+    private final ShopService shopService;
 
     public Order getOrder(Long id) {
         return orderRepository.findById(id).orElse(null);
     }
 
-    public Order validateOrderAndSaveEntity(OrderDTO orderDTO) {
-        furgonetkaClient.validateOrderPackage(preparePackageRequestDTO(orderDTO));
-        Order order = orderMapper.orderDTOToOrder(orderDTO);
+    public Order validateOrderAndSaveEntity(CreateOrderDto createOrderDto) {
+        furgonetkaClient.validateOrderPackage(preparePackageRequestDTO(createOrderDto));
+        Order order = new Order();
+        order.setProducts(orderMapper.orderProductDTOToOrderProduct(createOrderDto.getProducts()));
+        order.setName(createOrderDto.getName());
+        order.setEmail(createOrderDto.getEmail());
+        order.setPhoneNumber(createOrderDto.getPhoneNumber());
+        order.setService(createOrderDto.getService());
+
+        if(createOrderDto.getOrderAddress() != null) {
+            order.setStreet(createOrderDto.getOrderAddress().getStreet());
+            order.setPostcode(createOrderDto.getOrderAddress().getPostcode());
+            order.setCity(createOrderDto.getOrderAddress().getCity());
+        } else {
+            ShopDTO shop = shopService.getById(createOrderDto.getShopId());
+            order.setStreet(shop.getStreet());
+            order.setPostcode(shop.getPostcode());
+            order.setCity(shop.getCity());
+        }
 
         double finalPrice = 0.0;
-        for (OrderProductDTO orderProduct : orderDTO.getProducts()) {
+        for (OrderProductDTO orderProduct : createOrderDto.getProducts()) {
             double partialPrice = productService.getById(orderProduct.getProductId()).getPrice().doubleValue() * orderProduct.getQuantity();
             finalPrice += partialPrice;
         }
@@ -85,6 +105,70 @@ public class OrderService {
                 .phone(orderDTO.getPhoneNumber())
                 .countryCode("PL")
                 .build();
+
+        List<FurgonetkaPackageDTO> furgonetkaPackageDTOList = new ArrayList<>();
+
+        orderDTO.getProducts().forEach(orderProductDTO -> {
+            for (int i = 0; i < orderProductDTO.getQuantity(); i++) {
+                FurgonetkaPackageDTO packageDTO = FurgonetkaPackageDTO.builder()
+                        .width(30)
+                        .depth(50)
+                        .height(20)
+                        .weight(0.5f)
+                        .description("Buty")
+                        .build();
+                furgonetkaPackageDTOList.add(packageDTO);
+            }
+        });
+
+        return FurgonetkaPackageRequestDTO.builder()
+                .service_id(DeliveryService.fromName(orderDTO.getService()))
+                .pickup(packagePickupDTO)
+                .receiver(packageReceiverDTO)
+                .parcels(furgonetkaPackageDTOList)
+                .type("package")
+                .build();
+    }
+
+    private FurgonetkaPackageRequestDTO preparePackageRequestDTO(CreateOrderDto orderDTO) {
+        FurgonetkaPackagePickupDTO packagePickupDTO = FurgonetkaPackagePickupDTO.builder()
+                .street("Przykładowa 5")
+                .postcode("95-100")
+                .city("Zgierz")
+                .name("Jan Kowalski")
+                .company("Butex Sp. z o.o.")
+                .email("kontakt@butex.pl")
+                .phone("353874919")
+                .countryCode("PL")
+                .build();
+
+        FurgonetkaPackageReceiverDTO packageReceiverDTO = null;
+        if(orderDTO.getOrderAddress() != null) {
+            packageReceiverDTO = FurgonetkaPackageReceiverDTO.builder()
+                    .street(orderDTO.getOrderAddress().getStreet())
+                    .postcode(orderDTO.getOrderAddress().getPostcode())
+                    .city(orderDTO.getOrderAddress().getCity())
+                    .name(orderDTO.getName())
+                    .company("")
+                    .email(orderDTO.getEmail())
+                    .phone(orderDTO.getPhoneNumber())
+                    .countryCode("PL")
+                    .build();
+        } else {
+            ShopDTO shop = shopService.getById(orderDTO.getShopId());
+
+            packageReceiverDTO = FurgonetkaPackageReceiverDTO.builder()
+                    .street(shop.getStreet())
+                    .postcode(shop.getPostcode())
+                    .city(shop.getCity())
+                    .name(orderDTO.getName())
+                    .company("")
+                    .email(orderDTO.getEmail())
+                    .phone(orderDTO.getPhoneNumber())
+                    .countryCode("PL")
+                    .build();
+        }
+
 
         List<FurgonetkaPackageDTO> furgonetkaPackageDTOList = new ArrayList<>();
 
