@@ -3,7 +3,7 @@ spring:
     name: ButexBackend
   datasource:
     url: jdbc:postgresql://dpg-ctgqhul2ng1s738mslo0-a:5432/butex_gjql
-    username: butexgit sta
+    username: butex
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
