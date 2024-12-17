@@ -102,18 +102,18 @@ public class AdminController {
     }
 
     @GetMapping(path = "/product-color")
-    public ResponseEntity<List<String>> getProductColors() {
-        return ResponseEntity.ok(productColorRepository.findAll().stream().map(ProductColor::getColor).toList());
+    public ResponseEntity<List<ProductColor>> getProductColors() {
+        return ResponseEntity.ok(productColorRepository.findAll());
     }
 
     @GetMapping(path = "/product-type")
-    public ResponseEntity<List<String>> getProductTypes() {
-        return ResponseEntity.ok(productTypeRepository.findAll().stream().map(ProductType::getType).toList());
+    public ResponseEntity<List<ProductType>> getProductTypes() {
+        return ResponseEntity.ok(productTypeRepository.findAll());
     }
 
     @GetMapping(path = "/product-fabric")
-    public ResponseEntity<List<String>> getProductFabric() {
-        return ResponseEntity.ok(productFabricRepository.findAll().stream().map(ProductFabric::getFabric).toList());
+    public ResponseEntity<List<ProductFabric>> getProductFabric() {
+        return ResponseEntity.ok(productFabricRepository.findAll());
     }
 
     @PostMapping(path = "/product-type")
