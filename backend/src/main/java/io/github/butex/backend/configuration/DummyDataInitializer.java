@@ -1,6 +1,7 @@
 package io.github.butex.backend.configuration;
 
 import io.github.butex.backend.dto.*;
+import io.github.butex.backend.exception.DataAlreadyExistException;
 import io.github.butex.backend.service.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -119,7 +120,13 @@ public class DummyDataInitializer {
                     .productType(getRandomTypeDTO())
                     .image(getImageForType(randomType))
                     .build();
-            products.add(productService.create(product));
+            try{
+                ProductDTO productDTO = productService.create(product);
+                products.add(productDTO);
+            } catch (DataAlreadyExistException ignored){
+                System.out.println("product exist");
+            }
+
         }
 
         products.forEach(product -> {
