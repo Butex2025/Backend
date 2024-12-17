@@ -39,9 +39,9 @@ public class ProductService {
         ProductType productType = productTypeRepository.findByType(dto.getProductType().getType())
                 .orElseThrow(() -> new DataBadRequestException(String.format("Type %s not found", dto.getProductType().getType())));
 
-        if (productRepository.findByProductTypeAndProductFabric(productType, productFabric).isEmpty()) {
-            throw new DataAlreadyExistException("Product already exist");
-        }
+//        if (productRepository.findByProductTypeAndProductFabric(productType, productFabric).isEmpty()) {
+//            throw new DataAlreadyExistException("Product already exist");
+//        }
 
         Product product = Product.builder()
                 .name(dto.getName())
