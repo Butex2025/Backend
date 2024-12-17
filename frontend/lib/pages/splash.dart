@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/sign_in.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -14,10 +11,6 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Timer(
-      Duration(seconds: 2),
-      () => Navigator.of(context).pushReplacementNamed('/signin'),
-    );
   }
 
   @override
@@ -45,17 +38,6 @@ class _SplashPageState extends State<SplashPage> {
                 fontSize: 30,
               ),
             ),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       Navigator.push(context,
-            //           MaterialPageRoute(builder: (context) => SignIn()));
-            //     },
-            //     child: const Text(
-            //       'Next page',
-            //       style: TextStyle(
-            //         color: Colors.blue,
-            //       ),
-            //     )),
           ],
         )));
   }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/cubit/access_cubit.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -24,6 +26,8 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         leading: Container(
@@ -34,7 +38,7 @@ class _SignInState extends State<SignIn> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 80),
+              SizedBox(height: screenHeight * 0.09),
               const Text(
                 'Hello Again!',
                 style: TextStyle(
@@ -43,17 +47,17 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               const Text(
-              'Welcome Back Youve Been Missed!',
+                'Welcome Back Youve Been Missed!',
                 style: TextStyle(
                   fontSize: 20,
                 ),
               ),
-              const SizedBox(height: 60),
-              const Row(
+              SizedBox(height: screenHeight * 0.07),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 30),
-                  Text(
+                  SizedBox(width: screenWidth * 0.07),
+                  const Text(
                     'Email Address',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -92,12 +96,12 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-              const Row(
+              SizedBox(height: screenHeight * 0.05),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 30),
-                  Text(
+                  SizedBox(width: screenWidth * 0.08),
+                  const Text(
                     'Password',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -146,25 +150,12 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    child: const Text('Recovery Password'),
-                  onTap: () {},
-                  ),
-                  const SizedBox(width: 30),
-                ],
-              ),
               Container(
                 margin: const EdgeInsets.only(top: 30, left: 30, right: 30),
-                width: 350,
-                height: 50,
+                width: screenWidth * 0.75,
+                height: screenHeight * 0.06,
                 child: ElevatedButton(
-                  onPressed: () {
-                    print('Email: $email Password: $password');
-                    Navigator.pushReplacementNamed(context, '/main');
-                  },
+                  onPressed: () => logIn(context, email, password),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                   ),
@@ -174,12 +165,12 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-              const SizedBox(height: 200),
+              SizedBox(height: screenHeight * 0.15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                  'Dont Have An Account?   ',
+                    'Dont Have An Account?   ',
                     style: TextStyle(
                       fontSize: 10,
                     ),
@@ -192,9 +183,7 @@ class _SignInState extends State<SignIn> {
                         fontSize: 10,
                       ),
                     ),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/signup');
-                    },
+                    onTap: () => moveToRegister(context),
                   ),
                 ],
               ),
@@ -204,4 +193,14 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+}
+
+logIn(BuildContext context, String email, String password) {
+  final pokeCubit = BlocProvider.of<AccessCubit>(context);
+  pokeCubit.logIn(email, password);
+}
+
+moveToRegister(BuildContext context) {
+  final pokeCubit = BlocProvider.of<AccessCubit>(context);
+  pokeCubit.moveToRegister();
 }
