@@ -11,7 +11,7 @@ import lombok.*;
 @Entity
 @Builder
 @Table(name = "shop_product", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"product_id", "product_color_id", "product_size_id"})
+        @UniqueConstraint(columnNames = {"shop_id", "product_id", "product_color_id", "product_size_id"})
 })
 public class ShopProduct {
 
