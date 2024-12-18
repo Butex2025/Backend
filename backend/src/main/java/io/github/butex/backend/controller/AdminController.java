@@ -6,6 +6,7 @@ import io.github.butex.backend.dal.entity.ProductColor;
 import io.github.butex.backend.dal.entity.ProductFabric;
 import io.github.butex.backend.dal.entity.ProductType;
 import io.github.butex.backend.dal.entity.ShopProduct;
+import io.github.butex.backend.dal.repository.OrderRepository;
 import io.github.butex.backend.dal.repository.ProductColorRepository;
 import io.github.butex.backend.dal.repository.ProductFabricRepository;
 import io.github.butex.backend.dal.repository.ProductTypeRepository;
@@ -42,9 +43,9 @@ public class AdminController {
     private final ProductFabricRepository productFabricRepository;
     private final ProductColorRepository productColorRepository;
     private final ShopProductRepository shopProductRepository;
+    private final OrderRepository orderRepository;
 
     @PutMapping(path = "/order-status")
-
     public ResponseEntity<Order> changeOrderStatus(@RequestBody ChangeOrderStatusRequestDTO requestDTO) {
         Order order = orderService.changeOrderStatus(requestDTO.getOrderId(), requestDTO.getStatus());
         if (order == null) {
@@ -57,6 +58,36 @@ public class AdminController {
     @GetMapping(path = "/order")
     public ResponseEntity<List<Order>> getOrders() {
         return ResponseEntity.ok(orderService.getAllOrder());
+    }
+
+    // Update ShopProduct
+    @PutMapping(path = "/order/{id}")
+    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order order) {
+        return orderRepository.findById(id)
+                .map(existingShopProduct -> {
+                    existingShopProduct.setProducts(order.getProducts());
+                    existingShopProduct.setName(order.getName());
+                    existingShopProduct.setStreet(order.getStreet());
+                    existingShopProduct.setPostcode(order.getPostcode());
+                    existingShopProduct.setCity(order.getCity());
+                    existingShopProduct.setEmail(order.getEmail());
+                    existingShopProduct.setPhoneNumber(order.getPhoneNumber());
+                    existingShopProduct.setService(order.getService());
+                    existingShopProduct.setFinalPrice(order.getFinalPrice());
+                    Order updatedShopProduct = orderRepository.save(existingShopProduct);
+                    return ResponseEntity.ok(updatedShopProduct);
+                })
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    // Delete ShopProduct
+    @DeleteMapping(path = "/order/{id}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+        if (orderRepository.existsById(id)) {
+            orderRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PutMapping(path = "/product-quantity")
@@ -171,7 +202,7 @@ public class AdminController {
     @PutMapping(path = "/shop-product-quantity/{id}")
     public ResponseEntity<ShopProduct> changeProductQuantity(@PathVariable Long id, @RequestParam Long newQuantity) {
         ShopProduct shopProduct = shopProductRepository.findById(id).orElse(null);
-        if(shopProduct == null){
+        if (shopProduct == null) {
             return ResponseEntity.notFound().build();
         }
 
